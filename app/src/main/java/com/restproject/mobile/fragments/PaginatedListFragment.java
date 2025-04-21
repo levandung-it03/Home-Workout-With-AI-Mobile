@@ -34,18 +34,18 @@ public class PaginatedListFragment extends Fragment {
             if (currentPage == 1) return;
 
             this.paginationCurPage.setText(currentPage - 1);
-            this.requestSchedules(this.getDataToRequestList());
+            this.requestMainUIListData(this.getDataToRequestList());
         });
         this.paginationNextBtn.setOnClickListener(view -> {
             int currentPage = Integer.parseInt(this.paginationCurPage.getText().toString());
             if (currentPage == totalPages) return;
 
             this.paginationCurPage.setText(currentPage + 1);
-            this.requestSchedules(this.getDataToRequestList());
+            this.requestMainUIListData(this.getDataToRequestList());
         });
     }
 
-    public void requestSchedules(JSONObject requestObj) {
+    public void requestMainUIListData(JSONObject requestObj) {
     }
 
 }

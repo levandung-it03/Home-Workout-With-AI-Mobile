@@ -72,7 +72,7 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
                 JSONObject requestObj = new JSONObject(Map.of("id", selectedSchedule.getScheduleId()));
                 this.showScheduleDetailFragment(requestObj);
             });
-        this.requestSchedules(this.getDataToRequestList());
+        this.requestMainUIListData(this.getDataToRequestList());
         return view;
     }
 
@@ -88,7 +88,8 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
         }
     }
 
-    public void requestSchedules(JSONObject requestData) {
+    @Override
+    public void requestMainUIListData(JSONObject requestData) {
         var context = this;
         var reqUrl = APIBuilderForGET.parseFromJsonObject(requestData,
             BACKEND_ENDPOINT + PRIVATE_USER_DIR + "/v1/get-available-schedules-of-user-pages");
@@ -171,7 +172,7 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
     @Override
     public void recall(JSONObject reqData, RequestEnums reqEnum) {
         if (reqEnum.equals(RequestEnums.AVAILABLE_SCHE_GET_ALL_SCHEDULE))
-            this.requestSchedules(reqData);
+            this.requestMainUIListData(reqData);
         if (reqEnum.equals(RequestEnums.AVAILABLE_SCHE_GET_SCHEDULE_DETAIL))
             this.showScheduleDetailFragment(reqData);
     }
