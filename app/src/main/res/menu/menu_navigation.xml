@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navBar_home"
+        android:title="Home"
+        android:icon="@drawable/baseline_home_24"/>
+    <item
+        android:id="@+id/navBar_subscribeSchedule"
+        android:title="Subscribe"
+        android:icon="@drawable/calendar_add_on_24px"/>
+    <item
+        android:id="@+id/navBar_generateSchedule"
+        android:title="Generate"
+        android:icon="@drawable/exercise_24px"/>
+    <item
+        android:id="@+id/navBar_depositCoins"
+        android:title="Coins"
+        android:icon="@drawable/credit_card_24px"/>
+    <item
+        android:id="@+id/navBar_coinsHistories"
+        android:title="History"
+        android:icon="@drawable/description_24px"/>
+    <item
+        android:id="@+id/navBar_profile"
+        android:title="Profile"
+        android:icon="@drawable/baseline_account_circle_24"/>
+    <item
+        android:id="@+id/navBar_logout"
+        android:title="Logout"
+        android:icon="@drawable/logout_24px"/>
+</menu>

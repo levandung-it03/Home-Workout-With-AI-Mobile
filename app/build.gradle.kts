@@ -4,16 +4,33 @@ plugins {
 
 android {
     namespace = "com.restproject.mobile"
-    compileSdk = 34
+    compileSdk = 35
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.restproject.mobile"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BACKEND_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
+        buildConfigField("String", "FASTAPI_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
+        buildConfigField("String", "PRIVATE_USER_DIR", "\"/api/private/user\"")
+        buildConfigField("String", "PRIVATE_ADMIN_DIR", "\"/api/private/admin\"")
+        buildConfigField("String", "PRIVATE_AUTH_DIR", "\"/api/private/auth\"")
+        buildConfigField("String", "PUBLIC_AUTH_DIR", "\"/api/public/auth\"")
+        buildConfigField("String", "PUBLIC_DIR", "\"/api/public\"")
+        buildConfigField("Integer", "EXPIRED_TKN_ERR_CODE", "11003")
+        buildConfigField("String", "OAUTH2_DEFAULT_GG_PASS", "\"DEFAULT_OAUTH2_PASSWORD_FOR_GOOGLE\"")
+        buildConfigField("String", "SECRET_CRYPTO_KEY", "\"2Qm5pKkOLEsHgo3/AoPBefu2CMEZ2vMwp9cpq+gSDoo=\"")
+        buildConfigField("String", "OAUTH2_REDIRECT_MOBILE", "\"com.restproject.mobile://auth\"")
+        buildConfigField("String", "DATA_SEPARATOR", "\"_SePaRaToR_\"")
+
     }
 
     buildTypes {
@@ -32,7 +49,9 @@ android {
 }
 
 dependencies {
-
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.android.volley:volley:1.2.1")
+    implementation("com.squareup.picasso:picasso:2.8")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

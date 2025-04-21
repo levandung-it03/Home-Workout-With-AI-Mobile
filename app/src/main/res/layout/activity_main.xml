@@ -1,19 +1,71 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:theme="@style/Base.Theme.Mobile"
+    tools:context=".activities.MainActivity"
+    >
 
-    <TextView
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/mainLayout_viewPaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/mainLayout_navBar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <RelativeLayout
+        android:id="@+id/mainLayout_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+        <ImageButton
+            android:id="@+id/mainLayout_closeDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close_24px"
+            android:background="@drawable/bg_back_button"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:padding="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="5dp"/>
+        <FrameLayout
+            android:id="@+id/mainLayout_dialogContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/mainLayout_navBar"
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        app:menu="@menu/menu_navigation"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/mainLayout_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/mainLayout_navBar"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/mainLayout_tglBtnNav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/arrow_back_ios_new_24px"
+        android:scaleX="-1"
+        app:tint="@color/white"
+        app:backgroundTint="@color/black"
+        android:background="@drawable/block_white_round_corner"
+        android:padding="8dp"
+        android:layout_marginStart="-15dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/mainLayout_navBar"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
