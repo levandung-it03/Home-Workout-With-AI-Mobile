@@ -24,8 +24,8 @@ import com.restproject.mobile.activities.PrivateUIObject;
 import com.restproject.mobile.activities.RequestEnums;
 import com.restproject.mobile.adapters.AvaiChedScheduleListAdapter;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
-import com.restproject.mobile.models.HomeDetailSchedule;
 import com.restproject.mobile.models.PaginatedDataResponse;
+import com.restproject.mobile.models.PreviewScheduleResponse;
 import com.restproject.mobile.models.Schedule;
 import com.restproject.mobile.utils.APIBuilderForGET;
 import com.restproject.mobile.utils.APIUtilsHelper;
@@ -136,14 +136,15 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
         var jsonReq = new JsonObjectRequest(
             Request.Method.GET,
             APIBuilderForGET.parseFromJsonObject(requestData,
-                BACKEND_ENDPOINT + PRIVATE_USER_DIR + "/v1/get-preview-schedule-to-perform"),
+                BACKEND_ENDPOINT + PRIVATE_USER_DIR + "/v1/get-preview-schedule-info-for-user-to-subscribe"),
             null,
             success -> {
                 try {
-                    var data = HomeDetailSchedule.mapping(APIUtilsHelper.mapVolleySuccess(success).getData());
+                    var response = APIUtilsHelper.mapVolleySuccess(success).getData();
+                    var data = PreviewScheduleResponse.mapping(response);
                     this.getParentFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.mainLayout_dialogContainer, new DetailScheduleForHomeFragment(data))
+                        .replace(R.id.mainLayout_dialogContainer, new PreviewAvailableScheduleFragment(data))
                         .commit();
                     ((MainActivity) this.requireActivity()).openDialog();
                 } catch (RuntimeException e) {

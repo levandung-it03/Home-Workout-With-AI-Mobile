@@ -18,13 +18,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BACKEND_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
-        buildConfigField("String", "FASTAPI_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
-        buildConfigField("String", "PRIVATE_USER_DIR", "\"/api/private/user\"")
-        buildConfigField("String", "PRIVATE_ADMIN_DIR", "\"/api/private/admin\"")
-        buildConfigField("String", "PRIVATE_AUTH_DIR", "\"/api/private/auth\"")
-        buildConfigField("String", "PUBLIC_AUTH_DIR", "\"/api/public/auth\"")
-        buildConfigField("String", "PUBLIC_DIR", "\"/api/public\"")
+        buildConfigField("String", "BACKEND_ENDPOINT", "\"http://10.0.2.2:9090/api\"")
+        buildConfigField("String", "FASTAPI_ENDPOINT", "\"http://10.0.2.2:8000/fastapi\"")
+        buildConfigField("String", "PRIVATE_USER_DIR", "\"/private/user\"")
+        buildConfigField("String", "PRIVATE_ADMIN_DIR", "\"/private/admin\"")
+        buildConfigField("String", "PRIVATE_AUTH_DIR", "\"/private/auth\"")
+        buildConfigField("String", "PUBLIC_AUTH_DIR", "\"/public/auth\"")
+        buildConfigField("String", "PUBLIC_DIR", "\"/public\"")
         buildConfigField("Integer", "EXPIRED_TKN_ERR_CODE", "11003")
         buildConfigField("String", "OAUTH2_DEFAULT_GG_PASS", "\"DEFAULT_OAUTH2_PASSWORD_FOR_GOOGLE\"")
         buildConfigField("String", "SECRET_CRYPTO_KEY", "\"2Qm5pKkOLEsHgo3/AoPBefu2CMEZ2vMwp9cpq+gSDoo=\"")

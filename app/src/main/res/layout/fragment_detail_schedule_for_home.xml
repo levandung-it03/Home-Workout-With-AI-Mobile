@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.DetailScheduleForHomeFragment"
     android:orientation="vertical"
-    android:paddingTop="35dp"
+    android:paddingTop="40dp"
     android:paddingBottom="35dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp">
@@ -129,7 +129,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_spinner"
                     android:textSize="13sp"
-                    android:text="18/05/2025 05:30:28"
                     android:paddingTop="0dp"
                     android:paddingBottom="0dp"
                     android:paddingLeft="8dp"
