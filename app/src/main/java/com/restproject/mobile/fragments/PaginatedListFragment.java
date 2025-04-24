@@ -30,14 +30,14 @@ public class PaginatedListFragment extends Fragment {
 
     public void setUpPagination() {
         this.paginationPrevBtn.setOnClickListener(view -> {
-            int currentPage = Integer.parseInt(this.paginationCurPage.getText().toString());
+            int currentPage = this.getCurrentPage();
             if (currentPage == 1) return;
 
             this.paginationCurPage.setText(currentPage - 1);
             this.requestMainUIListData(this.getDataToRequestList());
         });
         this.paginationNextBtn.setOnClickListener(view -> {
-            int currentPage = Integer.parseInt(this.paginationCurPage.getText().toString());
+            int currentPage = this.getCurrentPage();
             if (currentPage == totalPages) return;
 
             this.paginationCurPage.setText(currentPage + 1);
@@ -48,4 +48,7 @@ public class PaginatedListFragment extends Fragment {
     public void requestMainUIListData(JSONObject requestObj) {
     }
 
+    public int getCurrentPage() {
+        return Integer.parseInt(paginationCurPage.getText().toString());
+    }
 }

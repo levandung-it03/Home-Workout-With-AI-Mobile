@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,8 +31,10 @@ import com.restproject.mobile.activities.RequestEnums;
 import com.restproject.mobile.adapters.AdapterHelper;
 import com.restproject.mobile.adapters.AvaiSchedSessionsListAdapter;
 import com.restproject.mobile.adapters.ExNamesListAdapter;
+import com.restproject.mobile.adapters.ViewPaperAdapter;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.models.PreviewScheduleResponse;
+import com.restproject.mobile.utils.APIBuilderForGET;
 import com.restproject.mobile.utils.APIUtilsHelper;
 import com.restproject.mobile.utils.VolleyErrorHandler;
 
@@ -43,7 +46,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PreviewAvailableScheduleFragment extends Fragment implements PrivateUIObject {
-    private final PreviewScheduleResponse data;
+    private PreviewScheduleResponse data = null;
+    private final Long scheduleId;
     private TextView scheduleName;
     private TextView level;
     private TextView coins;
@@ -53,6 +57,8 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
     private Spinner chooseAimSpin;
     private Spinner chooseLevelSpin;
     private Button subscribeBtn;
+    private LinearLayout dialogContainer;
+    private TextView explainTextView;
     private final HashMap<String, Integer> AIM_TYPES = new HashMap<>();
     private final HashMap<String, Integer> LEVEL_IDS = new HashMap<>(Map.of(
         "Original Level (100% level)", 100,
@@ -60,8 +66,8 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
         "Original Level (80% level)", 80
     ));
 
-    public PreviewAvailableScheduleFragment(PreviewScheduleResponse data) {
-        this.data = data;
+    public PreviewAvailableScheduleFragment(Long scheduleId) {
+        this.scheduleId = scheduleId;
     }
 
     @Override
@@ -82,8 +88,57 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
         this.chooseAimSpin = view.findViewById(R.id.page_availableSched_dialog_chooseAimSpin);
         this.chooseLevelSpin = view.findViewById(R.id.page_availableSched_dialog_chooseLevelSpin);
         this.subscribeBtn = view.findViewById(R.id.page_availableSched_dialog_subscribeBtn);
-        this.mappingDataIntoViews();
+        this.dialogContainer = view.findViewById(R.id.page_availableSched_dialog_dialogContainer);
+        this.explainTextView = view.findViewById(R.id.page_availableSched_dialog_explainTextView);
+
+        this.checkAndShowExplainTagIfEmptyList();
+        this.requestPreviewSchedule(new JSONObject(Map.of("id", this.scheduleId)));
         return view;
+    }
+
+    public void checkAndShowExplainTagIfEmptyList() {
+        if (Objects.isNull(this.data)) {
+            this.dialogContainer.setVisibility(View.GONE);
+            this.explainTextView.setVisibility(View.VISIBLE);
+        } else {
+            this.dialogContainer.setVisibility(View.VISIBLE);
+            this.explainTextView.setVisibility(View.GONE);
+        }
+    }
+
+    private void requestPreviewSchedule(JSONObject requestData) {
+        var context = this;
+        var jsonReq = new JsonObjectRequest(
+            Request.Method.GET,
+            APIBuilderForGET.parseFromJsonObject(requestData,
+                BACKEND_ENDPOINT + PRIVATE_USER_DIR + "/v1/get-preview-schedule-info-for-user-to-subscribe"),
+            null,
+            success -> {
+                try {
+                    var response = APIUtilsHelper.mapVolleySuccess(success).getData();
+                    this.data = PreviewScheduleResponse.mapping(response);
+                    this.mappingDataIntoViews();
+                } catch (RuntimeException e) {
+                    e.fillInStackTrace();
+                    Toast.makeText(this.getContext(), "An Error occurred. Please restart app.",
+                        Toast.LENGTH_SHORT).show();
+                }
+            }, error ->
+            APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
+                .activity((AppCompatActivity) context.requireActivity())
+                .context(context.getContext())
+                .app(context)
+                .requestData(requestData)
+                .requestEnum(RequestEnums.AVAILABLE_SCHE_GET_SCHEDULE_DETAIL)
+                .error(error))
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return RequestInterceptor.getPrivateHeaders(context.getContext());
+            }
+        };
+        Volley.newRequestQueue(context.requireContext())
+            .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
     }
 
     @SuppressLint("SetTextI18n")
@@ -91,8 +146,8 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
         this.scheduleName.setText(data.getSchedule().getName());
         AdapterHelper.checkAndChangeLevelTag(this.level, data.getSchedule().getLevelEnum());
         this.coins.setText(data.getSchedule().getCoins().toString() + "₵");
-        this.totalSessions.setText(data.getTotalSessions().toString());
-        this.totalExercises.setText(data.getTotalExercises().toString());
+        this.totalSessions.setText(data.getTotalSessions().toString() + "/week");
+        this.totalExercises.setText(data.getTotalExercises().toString() + "/schedule");
         this.sessionList.setAdapter(new AvaiSchedSessionsListAdapter(this.requireContext(),
             R.layout.layout_avaisched_session_item, this.data.getSessionsOfSchedules()));
         //--Set-up Level Spinner
@@ -167,10 +222,7 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
                 try {
                     var response = APIUtilsHelper.mapVolleySuccess(success);
                     Toast.makeText(this.getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
-                    if (this.getActivity() instanceof MainActivity) {
-                        var activity = (MainActivity) this.getActivity();
-                        activity.navigationView.getMenu().findItem(R.id.navBar_home).setChecked(true);
-                    }
+                    this.closeDialogAndReturnToHome();
                 } catch (RuntimeException e) {
                     e.fillInStackTrace();
                     Toast.makeText(this.getContext(), "An Error occurred. Please restart app.",
@@ -194,6 +246,15 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
             .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
     }
 
+    private void closeDialogAndReturnToHome() {
+        if (this.getActivity() instanceof MainActivity) {
+            var activity = (MainActivity) this.getActivity();
+            activity.closeDialogBtn.callOnClick();
+            activity.navigationView.getMenu().findItem(R.id.navBar_subscribeSchedule).setChecked(false);
+            activity.viewPager.setCurrentItem(0, false);
+            activity.viewPaperAdapter.refreshData(0);
+        }
+    }
 
     @Override
     public void recall(JSONObject reqData, RequestEnums reqEnum) {
@@ -201,5 +262,7 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
             this.requestAllAimsForSpin(reqData);
         if (reqEnum.equals(RequestEnums.SUBSCRIBE_SCHEDULE))
             this.requestSubscribeSchedule(reqData);
+        if (reqEnum.equals(RequestEnums.AVAILABLE_SCHE_GET_SCHEDULE_DETAIL))
+            this.requestPreviewSchedule(reqData);
     }
 }

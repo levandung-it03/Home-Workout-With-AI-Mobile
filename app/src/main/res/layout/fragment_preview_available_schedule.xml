@@ -11,305 +11,329 @@
     android:paddingBottom="35dp"
     tools:context=".fragments.PreviewAvailableScheduleFragment">
 
+    <TextView
+        android:id="@+id/page_availableSched_dialog_explainTextView"
+        android:layout_width="250dp"
+        android:layout_height="0dp"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="Loading..."
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:visibility="gone"/>
+
     <LinearLayout
+        android:id="@+id/page_availableSched_dialog_dialogContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/page_availableSched_dialog_scheduleName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Test Test Test Test"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/page_availableSched_dialog_scheduleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Test Test Test"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/page_availableSched_dialog_d1b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Level:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/page_availableSched_dialog_scheduleLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="BEGINNER"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_availableSched_dialog_d2b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/page_availableSched_dialog_d1b"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Coins:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginBottom="5dp"
+                        app:cardBackgroundColor="@android:color/white"
+                        app:cardCornerRadius="4dp">
+
+                        <TextView
+                            android:id="@+id/page_availableSched_dialog_coins"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/normal_gold"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:text="80₵"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_availableSched_dialog_d3b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/page_availableSched_dialog_d2b"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Sessions:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp">
+
+                        <TextView
+                            android:id="@+id/page_availableSched_dialog_totalSessions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:paddingLeft="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="5/week"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_availableSched_dialog_d4b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/page_availableSched_dialog_d3b"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Exercises:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp">
+
+                        <TextView
+                            android:id="@+id/page_availableSched_dialog_totalExercises"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:paddingLeft="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="26/schedule"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/page_availableSched_dialog_scheduleDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/page_availableSched_dialog_d4b"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Description Description Description"
+                    android:textColor="@color/normal_grey"
+                    android:textSize="15sp"
+                    android:textStyle="italic" />
+            </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
             android:background="#CCCCCC" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/page_availableSched_dialog_d1b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Level:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/page_availableSched_dialog_scheduleLevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="BEGINNER"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/page_availableSched_dialog_d2b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/page_availableSched_dialog_d1b"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Coins:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="4dp">
-
-                    <TextView
-                        android:id="@+id/page_availableSched_dialog_coins"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/normal_gold"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="80₵"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/page_availableSched_dialog_d3b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/page_availableSched_dialog_d2b"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Sessions:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    card_view:cardCornerRadius="4dp"
-                    card_view:cardElevation="4dp">
-
-                    <TextView
-                        android:id="@+id/page_availableSched_dialog_totalSessions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/black"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="2dp"
-                        android:text="5/week"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/page_availableSched_dialog_d4b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/page_availableSched_dialog_d3b"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Exercises:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    card_view:cardCornerRadius="4dp"
-                    card_view:cardElevation="4dp">
-
-                    <TextView
-                        android:id="@+id/page_availableSched_dialog_totalExercises"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/black"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="2dp"
-                        android:text="26/schedule"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/page_availableSched_dialog_scheduleDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/page_availableSched_dialog_d4b"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Description Description Description"
-                android:textColor="@color/normal_grey"
-                android:textSize="15sp"
-                android:textStyle="italic" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
-        android:background="#CCCCCC" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Session Information"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
-
-            <ListView
-                android:id="@+id/page_availableSched_dialog_sessionList"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:divider="@color/white"
-                android:dividerHeight="10dp" />
-        </ScrollView>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
-        android:background="#CCCCCC" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Choose Your Aim:"
+                android:layout_marginBottom="10dp"
+                android:text="Session Information"
                 android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="wrap_content"
+            <ScrollView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardElevation="4dp">
+                android:fillViewport="true">
 
-                <Spinner
-                    android:id="@+id/page_availableSched_dialog_chooseAimSpin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/bg_spinner"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="8dp"
-                    android:paddingBottom="0dp"
-                    android:textSize="13sp" />
-            </androidx.cardview.widget.CardView>
+                <ListView
+                    android:id="@+id/page_availableSched_dialog_sessionList"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:divider="@color/white"
+                    android:dividerHeight="10dp" />
+            </ScrollView>
+
         </LinearLayout>
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Level's Difficulty:"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
-
-            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                card_view:cardCornerRadius="4dp"
-                card_view:cardElevation="4dp">
-
-                <Spinner
-                    android:id="@+id/page_availableSched_dialog_chooseLevelSpin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/bg_spinner"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="8dp"
-                    android:paddingBottom="0dp"
-                    android:textSize="13sp" />
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/page_availableSched_dialog_subscribeBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
+            android:layout_height="1dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/btn_black_grey_states"
-            android:text="Subscribe"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:backgroundTint="@null" />
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="#CCCCCC" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Your Aim:"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_spinner"
+                    android:layout_marginStart="5dp"
+                    android:padding="1dp">
+                    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardElevation="4dp">
+                        <Spinner
+                            android:id="@+id/page_availableSched_dialog_chooseAimSpin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:paddingLeft="8dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:textSize="13sp" />
+                    </androidx.cardview.widget.CardView>
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level's Difficulty:"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_spinner"
+                    android:layout_marginStart="5dp"
+                    android:padding="1dp">
+                    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardElevation="4dp">
+                        <Spinner
+                            android:id="@+id/page_availableSched_dialog_chooseLevelSpin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:paddingLeft="8dp"
+                            android:paddingTop="0dp"
+                            android:paddingRight="8dp"
+                            android:paddingBottom="0dp"
+                            android:textSize="13sp" />
+                    </androidx.cardview.widget.CardView>
+                </FrameLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/page_availableSched_dialog_subscribeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_black_grey_states"
+                android:text="Subscribe"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:backgroundTint="@null" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

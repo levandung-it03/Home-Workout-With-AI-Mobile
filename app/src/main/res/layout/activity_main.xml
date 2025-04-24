@@ -8,7 +8,8 @@
     tools:context=".activities.MainActivity"
     >
 
-    <androidx.viewpager.widget.ViewPager
+    <!--  Use ViewPaper2 to use .setUserInputEnabled(boolean) to prevent swipe-screen from User -->
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/mainLayout_viewPaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

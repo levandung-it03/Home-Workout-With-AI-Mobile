@@ -55,7 +55,7 @@ public class AvaiSchedSessionsListAdapter extends BaseAdapter {
         PreviewScheduleResponse.PreviewSessionResponse session = sessions.get(position);
         name.setText(session.getSession().getName());
         desc.setText(session.getSession().getDescription());
-        level.setText(session.getSession().getLevelEnum());
+        AdapterHelper.checkAndChangeLevelTag(level, session.getSession().getLevelEnum());
         muscles.setText(session.getSession().getMusclesStr());
         exNames.setAdapter(new ExNamesListAdapter(context, R.layout.layout_avaisched_exname_item,
             session.getExerciseNames()));

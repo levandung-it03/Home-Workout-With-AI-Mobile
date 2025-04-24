@@ -2,8 +2,8 @@ package com.restproject.mobile.activities;
 
 import static com.restproject.mobile.BuildConfig.BACKEND_ENDPOINT;
 import static com.restproject.mobile.BuildConfig.PRIVATE_AUTH_DIR;
-import static com.restproject.mobile.BuildConfig.PRIVATE_USER_DIR;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -14,8 +14,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -26,25 +25,22 @@ import com.restproject.mobile.adapters.ViewPaperAdapter;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.exception.ApplicationException;
 import com.restproject.mobile.fragments.LoginFragment;
-import com.restproject.mobile.fragments.PreviewAvailableScheduleFragment;
-import com.restproject.mobile.models.PreviewScheduleResponse;
 import com.restproject.mobile.storage_helpers.InternalStorageHelper;
-import com.restproject.mobile.utils.APIBuilderForGET;
 import com.restproject.mobile.utils.APIUtilsHelper;
-import com.restproject.mobile.utils.VolleyErrorHandler;
 
 import org.json.JSONObject;
 
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    public ViewPager viewPager;
+    public ViewPager2 viewPager;
     public NavigationView navigationView;
     public ImageButton toggleBtn;
     public View navOverlay;
     public RelativeLayout dialog;
     public FrameLayout dialogFragment;
     public ImageButton closeDialogBtn;
+    public ViewPaperAdapter viewPaperAdapter;
     public Boolean isNavVisible = false;
     public Boolean isDialogVisible = false;
 
@@ -105,8 +101,11 @@ public class MainActivity extends AppCompatActivity {
         return tokens == null || tokens.length != 2;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setUpNavigation() {
         var context = this;
+        this.viewPaperAdapter = new ViewPaperAdapter(this);
+        this.viewPager.setAdapter(this.viewPaperAdapter);
         this.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = context.navigationView.getMenu();
             for (int i = 0; i < menu.size(); i++) {
@@ -117,24 +116,29 @@ public class MainActivity extends AppCompatActivity {
             }
             if (item.getItemId() == R.id.navBar_subscribeSchedule) {
                 context.viewPager.setCurrentItem(1);
+                context.viewPaperAdapter.refreshData(1);
             } else if (item.getItemId() == R.id.navBar_generateSchedule) {
                 context.viewPager.setCurrentItem(2);
+                context.viewPaperAdapter.refreshData(2);
             } else if (item.getItemId() == R.id.navBar_depositCoins) {
                 context.viewPager.setCurrentItem(3);
+                context.viewPaperAdapter.refreshData(3);
             } else if (item.getItemId() == R.id.navBar_coinsHistories) {
                 context.viewPager.setCurrentItem(4);
+                context.viewPaperAdapter.refreshData(4);
             } else if (item.getItemId() == R.id.navBar_profile) {
                 context.viewPager.setCurrentItem(5);
+                context.viewPaperAdapter.refreshData(5);
             } else if (item.getItemId() == R.id.navBar_logout) {
-                this.requestLogout();
+                context.requestLogout();
             } else {
                 context.viewPager.setCurrentItem(0);
+                context.viewPaperAdapter.refreshData(0);
             }
             return true;
         });
-        this.viewPager.setAdapter(new ViewPaperAdapter(this.getSupportFragmentManager(),
-            FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT));
-        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        this.viewPager.setUserInputEnabled(false);
+        this.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 //--Update On Navigation Bar (which is chosen, then highlight it)
@@ -156,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrolled(int p, float pOffset, int pOffsetPix) {
             }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
         });
 
         this.navigationView.getMenu().findItem(R.id.navBar_home).setChecked(true);

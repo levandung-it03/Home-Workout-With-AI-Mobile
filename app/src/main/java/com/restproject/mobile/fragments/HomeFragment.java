@@ -67,9 +67,12 @@ public class HomeFragment extends Fragment implements PrivateUIObject {
         this.scheduleListView.setAdapter(this.scheduleListAdapter);
         this.scheduleListView.setOnItemClickListener(
             (parent, view1, position, id) -> {
-                Schedule selectedSchedule = scheduleList.get(position);
-                JSONObject requestObj = new JSONObject(Map.of("id", selectedSchedule.getScheduleId()));
-                this.showScheduleDetailFragment(requestObj);
+                this.getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainLayout_dialogContainer,
+                        new DetailScheduleForHomeFragment(scheduleList.get(position).getScheduleId()))
+                    .commit();
+                ((MainActivity) this.requireActivity()).openDialog();
             });
         this.setUpScheduleTypeSpin();
         this.scheduleTypeSpin.setSelection(0);
@@ -162,50 +165,10 @@ public class HomeFragment extends Fragment implements PrivateUIObject {
             .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
     }
 
-    private void showScheduleDetailFragment(JSONObject requestData) {
-        var context = this;
-        var jsonReq = new JsonObjectRequest(
-            Request.Method.GET,
-            APIBuilderForGET.parseFromJsonObject(requestData,
-                BACKEND_ENDPOINT + PRIVATE_USER_DIR + "/v1/get-preview-schedule-to-perform"),
-            null,
-            success -> {
-                try {
-                    var data = HomeDetailSchedule.mapping(APIUtilsHelper.mapVolleySuccess(success).getData());
-                    this.getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.mainLayout_dialogContainer, new DetailScheduleForHomeFragment(data))
-                        .commit();
-                    ((MainActivity) this.requireActivity()).openDialog();
-                } catch (RuntimeException e) {
-                    e.fillInStackTrace();
-                    Toast.makeText(this.getContext(), "An Error occurred. Please restart app.",
-                        Toast.LENGTH_SHORT).show();
-                }
-            }, error ->
-            APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
-                .activity((AppCompatActivity) context.requireActivity())
-                .context(context.getContext())
-                .app(context)
-                .requestData(requestData)
-                .requestEnum(RequestEnums.HOME_GET_SCHEDULE_DETAIL)
-                .error(error))
-        ) {
-            @Override
-            public Map<String, String> getHeaders() {
-                return RequestInterceptor.getPrivateHeaders(context.getContext());
-            }
-        };
-        Volley.newRequestQueue(context.requireContext())
-            .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
-    }
-
     @Override
     public void recall(JSONObject reqData, RequestEnums reqEnum) {
         if (reqEnum.equals(RequestEnums.HOME_GET_ALL_SCHEDULE))
             this.requestSchedules(reqData);
-        if (reqEnum.equals(RequestEnums.HOME_GET_SCHEDULE_DETAIL))
-            this.showScheduleDetailFragment(reqData);
     }
 
 }
