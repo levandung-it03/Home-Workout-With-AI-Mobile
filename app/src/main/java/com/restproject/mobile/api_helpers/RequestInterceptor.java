@@ -56,4 +56,12 @@ public class RequestInterceptor {
         return headers;
     }
 
+    public static HashMap<String, String> getPrivateHeadersFastApi(Context context, String contType)
+            throws ApplicationException {
+        HashMap<String, String> headers = new HashMap<>();
+        var accTok = readIS(context, "tokens.txt").split(";")[1];
+        headers.put("Authorization", "Bearer " + accTok);
+        return headers;
+    }
+
 }

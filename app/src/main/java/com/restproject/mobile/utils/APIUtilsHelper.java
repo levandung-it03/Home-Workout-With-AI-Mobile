@@ -186,4 +186,14 @@ public class APIUtilsHelper {
         ));
         return request;
     }
+    public static VolleyMultipartRequest setVolleyMultipartRequestTimeOut(VolleyMultipartRequest request, int timeout) {
+        request.setRetryPolicy(new DefaultRetryPolicy(timeout,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+        return request;
+    }
+
+
+
 }

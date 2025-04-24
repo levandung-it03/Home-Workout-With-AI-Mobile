@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.restproject.mobile.fragments.AvailableSchedulesFragment;
+import com.restproject.mobile.fragments.GenerateSchedulesFragment;
 import com.restproject.mobile.fragments.HomeFragment;
 
 public class ViewPaperAdapter extends FragmentStatePagerAdapter {
@@ -18,14 +19,12 @@ public class ViewPaperAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-//            case 1:
-//                return new PersonFragment();
-//            case 2:
-//                return new SettingsFragment();
             case 0:
                 return new HomeFragment();
             case 1:
                 return new AvailableSchedulesFragment();
+            case 2:
+                return new GenerateSchedulesFragment();
             default:
                 return new Fragment();
         }

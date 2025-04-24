@@ -18,8 +18,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BACKEND_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
-        buildConfigField("String", "FASTAPI_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
+//        buildConfigField("String", "BACKEND_ENDPOINT", "\"https://944f-113-185-80-148.ngrok-free.app\"")
+        buildConfigField("String", "BACKEND_ENDPOINT", "\"http://192.168.100.171:9999\"")
+        buildConfigField("String", "FASTAPI_ENDPOINT", "\"http://192.168.100.171:8000\"")
         buildConfigField("String", "PRIVATE_USER_DIR", "\"/api/private/user\"")
         buildConfigField("String", "PRIVATE_ADMIN_DIR", "\"/api/private/admin\"")
         buildConfigField("String", "PRIVATE_AUTH_DIR", "\"/api/private/auth\"")
