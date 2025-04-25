@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.AvailableSchedulesFragment"
     android:orientation="vertical"
-    android:paddingTop="15dp"
+    android:paddingTop="20dp"
     android:paddingBottom="40dp">
 
     <LinearLayout

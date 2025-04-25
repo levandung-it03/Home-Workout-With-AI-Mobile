@@ -6,171 +6,310 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.DetailScheduleForHomeFragment"
     android:orientation="vertical"
-    android:paddingTop="35dp"
+    android:paddingTop="40dp"
     android:paddingBottom="35dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp">
 
+    <TextView
+        android:id="@+id/page_home_dialog_explainTxtForEmptyList"
+        android:layout_width="250dp"
+        android:layout_height="0dp"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="Loading..."
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:visibility="gone"/>
+
     <LinearLayout
+        android:id="@+id/page_home_dialog_dialogContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/page_home_dialog_scheduleName"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="Test Test Test Test"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/page_home_dialog_scheduleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="Test Test Test Test"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/page_home_dialog_d1b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentTop="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="Basic Info:" />
+                    <TextView
+                        android:id="@+id/page_home_dialog_scheduleLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="BEGINNER"/>
+                    <androidx.cardview.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp">
+                        <TextView
+                            android:id="@+id/page_home_dialog_scheduleAim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:text="WEIGHT UP"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_home_dialog_d2b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/page_home_dialog_d1b">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="Weight Aim:" />
+                    <androidx.cardview.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp">
+                        <TextView
+                            android:id="@+id/page_home_dialog_weightAim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:text="60kg+"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_home_dialog_d3b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/page_home_dialog_d2b">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="TDEE Calculation:" />
+                    <androidx.cardview.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp">
+                        <TextView
+                            android:id="@+id/page_home_dialog_tdee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:text="2168Cal/Day"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_home_dialog_d4b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/page_home_dialog_d3b">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="Subscribed Time:" />
+                    <androidx.cardview.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp">
+                        <TextView
+                            android:id="@+id/page_home_dialog_scheduleSubTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:text="18/05/2025 05:30:28"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_home_dialog_d5b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/page_home_dialog_d4b">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="Must Completed Time:" />
+                    <androidx.cardview.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        card_view:cardCornerRadius="4dp"
+                        card_view:cardElevation="4dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp">
+                        <TextView
+                            android:id="@+id/page_home_dialog_timeReachedEfficientDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:text="18/05/2025"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/page_home_dialog_d6b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@+id/page_home_dialog_d5b">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="Level Difficulty:" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_spinner"
+                        android:layout_marginStart="5dp"
+                        android:padding="1dp">
+                        <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            card_view:cardElevation="4dp">
+                            <Spinner
+                                android:id="@+id/page_home_dialog_scheduleChangeDifficulty"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="13sp"
+                                android:paddingTop="0dp"
+                                android:paddingBottom="0dp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginLeft="5dp"
+                                />
+                        </androidx.cardview.widget.CardView>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/page_home_dialog_scheduleDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/normal_grey"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="italic"
+                    android:text="Description Description Description"
+                    android:layout_below="@+id/page_home_dialog_d6b"/>
+            </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#CCCCCC"/>
+            android:background="#CCCCCC"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp" />
 
-        <RelativeLayout
+        <ListView
+            android:id="@+id/page_home_dialog_sessionList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/page_home_dialog_d1b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_alignParentTop="true">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:text="Basic Info:" />
-                <TextView
-                    android:id="@+id/page_home_dialog_scheduleLevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="BEGINNER"/>
-                <androidx.cardview.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    card_view:cardCornerRadius="4dp"
-                    card_view:cardElevation="4dp">
-                    <TextView
-                        android:id="@+id/page_home_dialog_scheduleAim"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/black"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:text="WEIGHT UP"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        />
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/page_home_dialog_d2b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/page_home_dialog_d1b">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:text="Subscribed Time:" />
-                <androidx.cardview.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    card_view:cardCornerRadius="4dp"
-                    card_view:cardElevation="4dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp">
-                    <TextView
-                        android:id="@+id/page_home_dialog_scheduleSubTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/black"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:text="18/05/2025 05:30:28"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        />
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/page_home_dialog_d3b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/page_home_dialog_d2b">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:text="Level Difficulty:" />
-                <Spinner
-                    android:id="@+id/page_home_dialog_scheduleChangeDifficulty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_spinner"
-                    android:textSize="13sp"
-                    android:text="18/05/2025 05:30:28"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/page_home_dialog_scheduleDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/normal_grey"
-                android:textSize="15sp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:textStyle="italic"
-                android:text="Description Description Description"
-                android:layout_below="@+id/page_home_dialog_d3b"/>
-        </RelativeLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:elevation="20dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#CCCCCC"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp" />
-
-    <ListView
-        android:id="@+id/page_home_dialog_sessionList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:elevation="20dp"
-        app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10dp" />
 
 </LinearLayout>

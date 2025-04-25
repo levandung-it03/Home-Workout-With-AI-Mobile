@@ -4,11 +4,17 @@ import android.annotation.SuppressLint;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DateTimeHelper {
+
+    public static String formatDateToStr(Date time) {
+        @SuppressLint("SimpleDateFormat") var sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(time);
+    }
 
     public static String formatDateTimeToStr(Date time) {
         @SuppressLint("SimpleDateFormat") var sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
@@ -53,5 +59,19 @@ public class DateTimeHelper {
 
     private static int dblStrToInt(String str) {
         return (int) Double.parseDouble(str);
+    }
+
+    public static Date addDaysIntoDate(Date date, int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, days);
+        return calendar.getTime();
+    }
+
+    public static Date addDaysIntoDate(int[] dates, int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(dates[0], dates[1], dates[2]);
+        calendar.add(Calendar.DATE, days);
+        return calendar.getTime();
     }
 }

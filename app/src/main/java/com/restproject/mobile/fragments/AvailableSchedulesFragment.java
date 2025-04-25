@@ -24,8 +24,8 @@ import com.restproject.mobile.activities.PrivateUIObject;
 import com.restproject.mobile.activities.RequestEnums;
 import com.restproject.mobile.adapters.AvaiChedScheduleListAdapter;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
-import com.restproject.mobile.models.HomeDetailSchedule;
 import com.restproject.mobile.models.PaginatedDataResponse;
+import com.restproject.mobile.models.PreviewScheduleResponse;
 import com.restproject.mobile.models.Schedule;
 import com.restproject.mobile.utils.APIBuilderForGET;
 import com.restproject.mobile.utils.APIUtilsHelper;
@@ -68,9 +68,12 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
         this.scheduleListView.setAdapter(this.scheduleListAdapter);
         this.scheduleListView.setOnItemClickListener(
             (parent, view1, position, id) -> {
-                Schedule selectedSchedule = scheduleList.get(position);
-                JSONObject requestObj = new JSONObject(Map.of("id", selectedSchedule.getScheduleId()));
-                this.showScheduleDetailFragment(requestObj);
+                this.getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainLayout_dialogContainer,
+                        new PreviewAvailableScheduleFragment(scheduleList.get(position).getScheduleId()))
+                    .commit();
+                ((MainActivity) this.requireActivity()).openDialog();
             });
         this.requestMainUIListData(this.getDataToRequestList());
         return view;
@@ -131,49 +134,9 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
             .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
     }
 
-    private void showScheduleDetailFragment(JSONObject requestData) {
-        var context = this;
-        var jsonReq = new JsonObjectRequest(
-            Request.Method.GET,
-            APIBuilderForGET.parseFromJsonObject(requestData,
-                BACKEND_ENDPOINT + PRIVATE_USER_DIR + "/v1/get-preview-schedule-to-perform"),
-            null,
-            success -> {
-                try {
-                    var data = HomeDetailSchedule.mapping(APIUtilsHelper.mapVolleySuccess(success).getData());
-                    this.getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.mainLayout_dialogContainer, new DetailScheduleForHomeFragment(data))
-                        .commit();
-                    ((MainActivity) this.requireActivity()).openDialog();
-                } catch (RuntimeException e) {
-                    e.fillInStackTrace();
-                    Toast.makeText(this.getContext(), "An Error occurred. Please restart app.",
-                        Toast.LENGTH_SHORT).show();
-                }
-            }, error ->
-            APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
-                .activity((AppCompatActivity) context.requireActivity())
-                .context(context.getContext())
-                .app(context)
-                .requestData(requestData)
-                .requestEnum(RequestEnums.AVAILABLE_SCHE_GET_SCHEDULE_DETAIL)
-                .error(error))
-        ) {
-            @Override
-            public Map<String, String> getHeaders() {
-                return RequestInterceptor.getPrivateHeaders(context.getContext());
-            }
-        };
-        Volley.newRequestQueue(context.requireContext())
-            .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
-    }
-
     @Override
     public void recall(JSONObject reqData, RequestEnums reqEnum) {
         if (reqEnum.equals(RequestEnums.AVAILABLE_SCHE_GET_ALL_SCHEDULE))
             this.requestMainUIListData(reqData);
-        if (reqEnum.equals(RequestEnums.AVAILABLE_SCHE_GET_SCHEDULE_DETAIL))
-            this.showScheduleDetailFragment(reqData);
     }
 }

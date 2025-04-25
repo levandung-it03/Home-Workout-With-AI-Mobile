@@ -52,6 +52,8 @@ public class RequestInterceptor {
     public static HashMap<String, String> getPrivateHeaders(Context context, String contType)
             throws ApplicationException {
         HashMap<String, String> headers = getPrivateHeaders(context);
+        var accTok = readIS(context, "tokens.txt").split(";")[1];
+        headers.put("Authorization", "Bearer " + accTok);
         headers.put("Content-type", contType);
         return headers;
     }

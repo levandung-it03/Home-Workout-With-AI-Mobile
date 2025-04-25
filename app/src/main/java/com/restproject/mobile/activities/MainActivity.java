@@ -1,32 +1,46 @@
 package com.restproject.mobile.activities;
 
+import static com.restproject.mobile.BuildConfig.BACKEND_ENDPOINT;
+import static com.restproject.mobile.BuildConfig.PRIVATE_AUTH_DIR;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 import com.restproject.mobile.R;
 import com.restproject.mobile.adapters.ViewPaperAdapter;
+import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.exception.ApplicationException;
 import com.restproject.mobile.fragments.LoginFragment;
 import com.restproject.mobile.storage_helpers.InternalStorageHelper;
+import com.restproject.mobile.utils.APIUtilsHelper;
+
+import org.json.JSONObject;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    ViewPager viewPager;
-    NavigationView navigationView;
-    ImageButton toggleBtn;
-    View navOverlay;
-    RelativeLayout dialog;
-    FrameLayout dialogFragment;
-    ImageButton closeDialogBtn;
+    public ViewPager2 viewPager;
+    public NavigationView navigationView;
+    public ImageButton toggleBtn;
+    public View navOverlay;
+    public RelativeLayout dialog;
+    public FrameLayout dialogFragment;
+    public ImageButton closeDialogBtn;
+    public ViewPaperAdapter viewPaperAdapter;
     public Boolean isNavVisible = false;
     public Boolean isDialogVisible = false;
 
@@ -68,11 +82,9 @@ public class MainActivity extends AppCompatActivity {
     private void setUpDialog() {
         this.dialog.setVisibility(View.GONE);
         this.closeDialogBtn.setOnClickListener(v -> {
-            this.isDialogVisible = !this.isDialogVisible;
-            this.dialog.setVisibility(this.isDialogVisible ? View.VISIBLE : View.GONE);
-            if (!this.isDialogVisible) {
-                this.dialogFragment.removeAllViews();
-            }
+            this.isDialogVisible = false;
+            this.dialog.setVisibility(View.GONE);
+            this.dialogFragment.removeAllViews();
         });
     }
 
@@ -86,38 +98,45 @@ public class MainActivity extends AppCompatActivity {
         return tokens == null || tokens.length != 2;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setUpNavigation() {
         var context = this;
+        this.viewPaperAdapter = new ViewPaperAdapter(this);
+        this.viewPager.setAdapter(this.viewPaperAdapter);
         this.navigationView.setNavigationItemSelectedListener(item -> {
             Menu menu = context.navigationView.getMenu();
             for (int i = 0; i < menu.size(); i++) {
                 if (menu.getItem(i).isChecked()) {
-                    if (menu.getItem(i).equals(item))   return false;
+                    if (menu.getItem(i).equals(item)) return false;
                     menu.getItem(i).setChecked(false);
                 }
             }
+            closeDialogBtn.callOnClick();
             if (item.getItemId() == R.id.navBar_subscribeSchedule) {
                 context.viewPager.setCurrentItem(1);
+                context.viewPaperAdapter.refreshData(1);
             } else if (item.getItemId() == R.id.navBar_generateSchedule) {
                 context.viewPager.setCurrentItem(2);
+                context.viewPaperAdapter.refreshData(2);
             } else if (item.getItemId() == R.id.navBar_depositCoins) {
                 context.viewPager.setCurrentItem(3);
+                context.viewPaperAdapter.refreshData(3);
             } else if (item.getItemId() == R.id.navBar_coinsHistories) {
                 context.viewPager.setCurrentItem(4);
+                context.viewPaperAdapter.refreshData(4);
             } else if (item.getItemId() == R.id.navBar_profile) {
                 context.viewPager.setCurrentItem(5);
+                context.viewPaperAdapter.refreshData(5);
             } else if (item.getItemId() == R.id.navBar_logout) {
-                try { InternalStorageHelper.writeIS(context, "tokens.txt", ""); }
-                catch (ApplicationException e) { e.fillInStackTrace(); }
-                context.showLoginFragment();
+                context.requestLogout();
             } else {
                 context.viewPager.setCurrentItem(0);
+                context.viewPaperAdapter.refreshData(0);
             }
             return true;
         });
-        this.viewPager.setAdapter(new ViewPaperAdapter(this.getSupportFragmentManager(),
-            FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT));
-        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        this.viewPager.setUserInputEnabled(false);
+        this.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 //--Update On Navigation Bar (which is chosen, then highlight it)
@@ -134,10 +153,11 @@ public class MainActivity extends AppCompatActivity {
                 else if (position == 5)
                     context.navigationView.getMenu().findItem(R.id.navBar_profile).setChecked(true);
             }
+
             @Override
-            public void onPageScrolled(int p, float pOffset, int pOffsetPix) {}
-            @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int p, float pOffset, int pOffsetPix) {
+            }
+
         });
 
         this.navigationView.getMenu().findItem(R.id.navBar_home).setChecked(true);
@@ -149,6 +169,44 @@ public class MainActivity extends AppCompatActivity {
             context.navOverlay.setVisibility(context.isNavVisible ? View.VISIBLE : View.GONE);
             context.toggleBtn.setScaleX(context.isNavVisible ? 1 : -1);
         });
+    }
+
+    public void requestLogout() {
+        try {
+            var context = this;
+            var reqData = new JSONObject(Map.of("token",
+                InternalStorageHelper.readIS(context, "tokens.txt").split(";")[1]));
+            var jsonReq = new JsonObjectRequest(
+                Request.Method.POST,
+                BACKEND_ENDPOINT + PRIVATE_AUTH_DIR + "/v1/logout",
+                reqData,
+                success -> {
+                    var response = APIUtilsHelper.mapVolleySuccess(success);
+                    Toast.makeText(this.getBaseContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }, error ->
+                Toast.makeText(context, APIUtilsHelper.readErrorFromVolley(error).getMessage(),
+                    Toast.LENGTH_SHORT).show()
+            ) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    return RequestInterceptor.getPrivateAuthHeaders(context.getBaseContext());
+                }
+            };
+            Volley.newRequestQueue(context.getBaseContext())
+                .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
+        } catch (ApplicationException e) {
+            e.fillInStackTrace();
+            Toast.makeText(this.getBaseContext(), "An Error occurred. Please restart app.",
+                Toast.LENGTH_SHORT).show();
+        }
+        try {
+            InternalStorageHelper.writeIS(this, "tokens.txt", "");
+        } catch (ApplicationException e) {
+            e.fillInStackTrace();
+            Toast.makeText(this.getBaseContext(), "An Error occurred. Please restart app.",
+                Toast.LENGTH_SHORT).show();
+        }
+        this.showLoginFragment();
     }
 
     public void showLoginFragment() {
