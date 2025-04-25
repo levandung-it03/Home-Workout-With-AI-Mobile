@@ -230,7 +230,7 @@ public class DetailScheduleForHomeFragment extends Fragment implements PrivateUI
                 .context(context.getContext())
                 .app(context)
                 .requestData(requestObj)
-                .requestEnum(RequestEnums.HOME_GET_SCHEDULE_DETAIL)
+                .requestEnum(RequestEnums.HOME_UPDATE_REP_RATIO)
                 .error(error))
         ) {
             @Override

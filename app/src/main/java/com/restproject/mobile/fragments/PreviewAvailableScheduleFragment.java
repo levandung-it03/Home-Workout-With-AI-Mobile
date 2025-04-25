@@ -201,7 +201,7 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
                 .context(context.getContext())
                 .app(context)
                 .requestData(ignored)
-                .requestEnum(RequestEnums.HOME_GET_ALL_SCHEDULE)
+                .requestEnum(RequestEnums.GET_ALL_AIMS)
                 .error(error))
         ) {
             @Override
@@ -235,7 +235,7 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
                 .context(context.getContext())
                 .app(context)
                 .requestData(reqData)
-                .requestEnum(RequestEnums.HOME_GET_ALL_SCHEDULE)
+                .requestEnum(RequestEnums.SUBSCRIBE_SCHEDULE)
                 .error(error))
         ) {
             @Override
