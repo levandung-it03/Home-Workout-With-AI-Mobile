@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -40,7 +39,7 @@ public class ProfileFragment extends Fragment implements PrivateUIObject {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        this.requestUserInfo(null);
         return view;
     }
 
@@ -51,7 +50,8 @@ public class ProfileFragment extends Fragment implements PrivateUIObject {
             BuildConfig.BACKEND_ENDPOINT + BuildConfig.PRIVATE_USER_DIR + "/v1/get-info",
             null,
             success -> {
-
+                var response = APIUtilsHelper.mapVolleySuccess(success);
+                this.data = UserInfo.mapping(response.getData());
             }, error ->
                 APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
                     .activity((AppCompatActivity) context.requireActivity())
@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment implements PrivateUIObject {
                     .error(error))
         ) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 return RequestInterceptor.getPrivateAuthHeaders(context.getContext());
             }
         };

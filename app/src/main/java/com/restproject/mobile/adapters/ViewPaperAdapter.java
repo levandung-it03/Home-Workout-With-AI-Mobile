@@ -30,7 +30,7 @@ public class ViewPaperAdapter extends FragmentStateAdapter {
             case 1:
                 return this.pushToMap(position, new AvailableSchedulesFragment());
             case 2:
-                return new GenerateSchedulesFragment();
+                return this.pushToMap(position, new GenerateSchedulesFragment());
             default:
                 return new Fragment();
         }

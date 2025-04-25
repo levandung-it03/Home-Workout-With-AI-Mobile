@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 context.viewPaperAdapter.refreshData(1);
             } else if (item.getItemId() == R.id.navBar_generateSchedule) {
                 context.viewPager.setCurrentItem(2);
-                context.viewPaperAdapter.refreshData(2);
             } else if (item.getItemId() == R.id.navBar_depositCoins) {
                 context.viewPager.setCurrentItem(3);
                 context.viewPaperAdapter.refreshData(3);
