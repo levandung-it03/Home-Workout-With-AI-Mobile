@@ -118,6 +118,7 @@ public class PreviewAvailableScheduleFragment extends Fragment implements Privat
                     var response = APIUtilsHelper.mapVolleySuccess(success).getData();
                     this.data = PreviewScheduleResponse.mapping(response);
                     this.mappingDataIntoViews();
+                    this.checkAndShowExplainTagIfEmptyList();
                 } catch (RuntimeException e) {
                     e.fillInStackTrace();
                     Toast.makeText(this.getContext(), "An Error occurred. Please restart app.",

@@ -83,11 +83,9 @@ public class MainActivity extends AppCompatActivity {
     private void setUpDialog() {
         this.dialog.setVisibility(View.GONE);
         this.closeDialogBtn.setOnClickListener(v -> {
-            this.isDialogVisible = !this.isDialogVisible;
-            this.dialog.setVisibility(this.isDialogVisible ? View.VISIBLE : View.GONE);
-            if (!this.isDialogVisible) {
-                this.dialogFragment.removeAllViews();
-            }
+            this.isDialogVisible = false;
+            this.dialog.setVisibility(View.GONE);
+            this.dialogFragment.removeAllViews();
         });
     }
 
@@ -114,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     menu.getItem(i).setChecked(false);
                 }
             }
+            closeDialogBtn.callOnClick();
             if (item.getItemId() == R.id.navBar_subscribeSchedule) {
                 context.viewPager.setCurrentItem(1);
                 context.viewPaperAdapter.refreshData(1);
