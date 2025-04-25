@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="40dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/aimText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Aim"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/spinnerAim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_boder"
+            android:minHeight="30dp" />
+
+        <TextView
+            android:id="@+id/genderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Gender"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/spinnerGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_boder"
+            android:minHeight="30dp" />
+
+        <TextView
+            android:id="@+id/textAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Age"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDecreaseAge"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_small"
+                android:gravity="center"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+
+            <EditText
+                android:id="@+id/textValueAge"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center"
+                android:padding="0dp"
+                android:inputType="number"
+                android:text="0"
+                android:background="@android:color/transparent"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnIncreaseAge"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Current Weight"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDecreaseWeight"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_small"
+                android:gravity="center"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+
+            <EditText
+                android:id="@+id/textValueWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center"
+                android:inputType="number"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:text="0"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnIncreaseWeight"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/textSession"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Session Quantity"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnDecreaseSession"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_small"
+                android:gravity="center"
+                android:padding="0dp"
+                android:text="-"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+
+            <EditText
+                android:id="@+id/textValueSession"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center"
+                android:inputType="number"
+                android:padding="0dp"
+                android:background="@android:color/transparent"
+                android:text="0"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnIncreaseSession"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_small"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/textLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Level's Difficulty"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/spinnerLevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_boder"
+            android:minHeight="30dp" />
+
+        <TextView
+            android:id="@+id/textRatio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/baseline_album_24"
+            android:drawablePadding="10sp"
+            android:text="Aim Ratio"
+            android:textColor="@color/blue_700"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/spinnerRaito"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_boder"
+            android:minHeight="30dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/body_template"
+                android:layout_marginBottom="10dp"
+                android:contentDescription="Image preview"/>
+
+            <TextView
+                android:id="@+id/textHintUploadImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_image_hint"
+                android:lineSpacingExtra="4dp"
+                android:textAlignment="center"
+                android:textColor="@color/grey"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnUploadImage"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_medium"
+                android:padding="0dp"
+                android:layout_marginTop="10dp"
+                android:text="Caculate"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:backgroundTint="@null" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnSumbit"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/button_medium"
+            android:padding="0dp"
+            android:text="Submit"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:enabled="false"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+</ScrollView>

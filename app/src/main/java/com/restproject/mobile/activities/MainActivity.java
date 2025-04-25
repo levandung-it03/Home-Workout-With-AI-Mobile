@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         this.dialog = this.findViewById(R.id.mainLayout_dialog);
         this.closeDialogBtn = this.findViewById(R.id.mainLayout_closeDialog);
         this.dialogFragment = this.findViewById(R.id.mainLayout_dialogContainer);
-
         if (this.missingTokensInDevice()) {
             this.showLoginFragment();
         } else {

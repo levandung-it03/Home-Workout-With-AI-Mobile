@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.restproject.mobile.fragments.AvailableSchedulesFragment;
+import com.restproject.mobile.fragments.GenerateSchedulesFragment;
 import com.restproject.mobile.fragments.HomeFragment;
 
 import org.json.JSONObject;
@@ -24,14 +25,12 @@ public class ViewPaperAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-//            case 1:
-//                return new PersonFragment();
-//            case 2:
-//                return new SettingsFragment();
             case 0:
                 return this.pushToMap(position, new HomeFragment());
             case 1:
                 return this.pushToMap(position, new AvailableSchedulesFragment());
+            case 2:
+                return new GenerateSchedulesFragment();
             default:
                 return new Fragment();
         }
