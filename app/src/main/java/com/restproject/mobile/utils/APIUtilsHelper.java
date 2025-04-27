@@ -1,6 +1,7 @@
 package com.restproject.mobile.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -9,6 +10,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.restproject.mobile.R;
@@ -71,6 +74,20 @@ public class APIUtilsHelper {
         }
     }
 
+    public static APIResponseObject<LinkedTreeMap> mapVolleySuccessStringTime(JSONObject response) {
+        try {
+            return new APIResponseObject<>(
+                    Integer.parseInt(response.get("applicationCode").toString()),
+                    response.get("message").toString(),
+                    Integer.parseInt(response.get("httpStatusCode").toString()),
+                    new Gson().fromJson(response.get("data").toString(), LinkedTreeMap.class),
+                    response.get("responseTime").toString()
+            );
+        } catch (Exception e) {
+            return new APIResponseObject<>("Error from server to read response");
+        }
+    }
+
     public static APIResponseObject<String> mapSimpleVolleySuccess(JSONObject response) {
         try {
             return new APIResponseObject<>(
@@ -93,6 +110,34 @@ public class APIUtilsHelper {
                 if (response.getMessage() == null)
                     throw new NullPointerException();
                 return response;
+            } catch (NullPointerException e) {
+                APIResponseObject<Void> response = new Gson().fromJson(json, APIResponseObject.class);
+                if (response.getMessage() == null)
+                    throw new NullPointerException();
+                return response;
+            } catch (Exception e) {
+                return new APIResponseObject<>("Error from server to read response");
+            }
+        } else {
+            return new APIResponseObject<>("No network response from server");
+        }
+    }
+    public static APIResponseObject<Void> readErrorFromVolleyStringTime(VolleyError error) {
+        if (error.networkResponse != null && error.networkResponse.data != null) {
+            String json = new String(error.networkResponse.data);
+            try {
+                Log.e("VolleyError", "Server response: " + json);
+
+                JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+                int applicationCode = jsonObject.has("applicationCode") ? jsonObject.get("applicationCode").getAsInt() : -1;
+                String message = jsonObject.has("message") ? jsonObject.get("message").getAsString() : "Unknown error";
+                int httpStatusCode = jsonObject.has("httpStatusCode") ? jsonObject.get("httpStatusCode").getAsInt() : -1;
+                String responseDateTime = jsonObject.has("responseTime") ? jsonObject.get("responseTime").getAsString() : "Unknown time";
+
+                // Dùng constructor thứ 3
+                return new APIResponseObject<>(applicationCode, message, httpStatusCode, null, responseDateTime);
+
             } catch (NullPointerException e) {
                 APIResponseObject<Void> response = new Gson().fromJson(json, APIResponseObject.class);
                 if (response.getMessage() == null)
