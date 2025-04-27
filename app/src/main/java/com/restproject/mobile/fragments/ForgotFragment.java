@@ -27,7 +27,7 @@ import com.restproject.mobile.BuildConfig;
 import com.restproject.mobile.R;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.utils.APIResponseObject;
-import com.restproject.mobile.utils.InputValidators;
+import static com.restproject.mobile.utils.InputValidators.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,7 +88,7 @@ public class ForgotFragment extends Fragment {
         }
         var jsonRequest = new JsonObjectRequest(Request.Method.POST,
             BuildConfig.BACKEND_ENDPOINT + BuildConfig.PUBLIC_AUTH_DIR + "/v1/get-forgot-password-otp",
-            new JSONObject(Map.of("email", this.email.getText().toString())),
+            new JSONObject(Map.of("email", getEdtStr(this.email))),
             success -> {
                 var response = mapVolleySuccess(success);
                 if (Objects.isNull(response.getData())) {
@@ -115,10 +115,10 @@ public class ForgotFragment extends Fragment {
     }
 
     private String validateValues() {
-        if (!InputValidators.isValidStr(this.email.getText().toString()))
+        if (!isValidStr(getEdtStr(this.email)))
             return "Email";
         if (!Pattern.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$",
-            this.email.getText().toString()))
+            getEdtStr(this.email)))
             return "Email";
         return null;
     }
@@ -162,10 +162,10 @@ public class ForgotFragment extends Fragment {
     private void confirmOtpAndSendRandPassToEmail() {
         JSONObject jsonReqObj;
         try {
-            String otpCode = this.otpCode.getText().toString().toUpperCase();
+            String otpCode = getEdtStr(this.otpCode).toUpperCase();
             if (otpCode.isEmpty()) throw new NullPointerException();
             jsonReqObj = new JSONObject()
-                .put("email", this.email.getText().toString())
+                .put("email", getEdtStr(this.email))
                 .put("otpCode", otpCode);
         } catch (NullPointerException | JSONException e) {
             e.fillInStackTrace();
