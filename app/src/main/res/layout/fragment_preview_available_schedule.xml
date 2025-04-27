@@ -103,7 +103,7 @@
                             android:id="@+id/page_availableSched_dialog_coins"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/normal_gold"
+                            android:background="@drawable/bg_coins"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:text="80₵"

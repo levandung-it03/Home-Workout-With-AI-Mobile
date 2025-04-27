@@ -106,6 +106,59 @@ public class APIUtilsHelper {
         }
     }
 
+    /**
+     * This method will handle Private Requests, and not disrupt the Session when reach another err.
+     * @param info: Basic Info
+     */
+    public static void handleSpecialPrivateVolleyRequestError(VolleyErrorHandler info) {
+        APIResponseObject<Void> response = APIUtilsHelper.readErrorFromVolley(info.getError());
+        if (response.getApplicationCode() != null) {
+            if (response.getApplicationCode().equals(EXPIRED_TKN_ERR_CODE)) {
+                try {
+                    String[] tokens = readIS(info.getContext(), "tokens.txt").split(",");
+                    var jsonRequestObject = new JsonObjectRequest(
+                        Request.Method.POST,
+                        BACKEND_ENDPOINT + PRIVATE_AUTH_DIR + "/v1/refresh-token",
+                        new JSONObject().put("token", tokens[1]),
+                        success -> {
+                            var res = APIUtilsHelper.mapVolleySuccess(success);
+                            APIUtilsHelper.saveTokensAfterAuthentication(info.getContext(), Map.of(
+                                "accessToken", Objects.requireNonNull(res.getData().get("token")).toString(),
+                                "refreshToken", tokens[0]
+                            ));
+                            System.out.println("From refreshAccessToken(): " + res.getMessage());
+                            info.getApp().recall(info.getRequestData(), info.getRequestEnum());
+                        },
+                        error -> {
+                            var e = new Exception("Application is wrong, please restart it");
+                            //--If Refresh-Token is also expired, inflate Login-Fragment.
+                            if (readErrorFromVolley(error).getApplicationCode().equals(EXPIRED_TKN_ERR_CODE))
+                                e = new Exception("Too long Login session, login in again!");
+                            //--If something is wrong from Backend-System, inflate Login-Fragment.
+                            clearInterStorageAndToast(e, info);
+                        }
+                    ) {
+                        //--Change Headers to put Refresh-Token as Authorization Bearer.
+                        @Override
+                        public Map<String, String> getHeaders() {
+                            return RequestInterceptor.getPrivateAuthHeaders(info.getContext());
+                        }
+                    };
+                    //--Calling request.
+                    Volley
+                        .newRequestQueue(info.getContext())
+                        .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonRequestObject, 30_000));
+                } catch (Exception e) {
+                    clearInterStorageAndToast(e, info);
+                }
+            } else {
+                Toast.makeText(info.getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            clearInterStorageAndToast(new Exception("Application is wrong, please restart it"), info);
+        }
+    }
+
     public static void handlePrivateVolleyRequestError(VolleyErrorHandler info) {
         APIResponseObject<Void> response = APIUtilsHelper.readErrorFromVolley(info.getError());
         if (response.getApplicationCode() != null && response.getApplicationCode().equals(EXPIRED_TKN_ERR_CODE)) {

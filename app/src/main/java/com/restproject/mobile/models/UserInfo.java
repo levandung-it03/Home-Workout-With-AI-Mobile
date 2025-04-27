@@ -2,10 +2,11 @@ package com.restproject.mobile.models;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class UserInfo {
+public class UserInfo implements Serializable {
     private Long userInfoId;
     private String firstName;
     private String lastName;

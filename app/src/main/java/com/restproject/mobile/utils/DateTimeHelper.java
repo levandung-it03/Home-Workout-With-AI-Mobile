@@ -11,6 +11,15 @@ import java.util.stream.Collectors;
 
 public class DateTimeHelper {
 
+    /**
+     * @param time:Date
+     * @return String:[yyyy-MM-dd]
+     */
+    public static String formatDateToSpringFormat(Date time) {
+        @SuppressLint("SimpleDateFormat") var sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(time);
+    }
+
     public static String formatDateToStr(Date time) {
         @SuppressLint("SimpleDateFormat") var sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(time);
@@ -70,7 +79,7 @@ public class DateTimeHelper {
 
     public static Date addDaysIntoDate(int[] dates, int days) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(dates[0], dates[1], dates[2]);
+        calendar.set(dates[0], dates[1] - 1, dates[2]);
         calendar.add(Calendar.DATE, days);
         return calendar.getTime();
     }

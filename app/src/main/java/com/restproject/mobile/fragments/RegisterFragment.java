@@ -42,18 +42,11 @@ import java.util.regex.Pattern;
 public class RegisterFragment extends Fragment {
     private final HashMap<String, Integer> SPIN_OPTIONS = new HashMap<>();
     private final Integer[] otpTimeHolder = new Integer[1];
-    private ScrollView basicInfoFrame;
-    private ScrollView otpFrame;
-    private EditText firstName;
-    private EditText lastName;
-    private EditText dob;
+    private ScrollView basicInfoFrame, otpFrame;
+    private EditText firstName, lastName, dob, email, passEdt, rePassEdt, otpCode;
     private Spinner genderSpin;
-    private EditText email;
-    private EditText passEdt;
-    private EditText rePassEdt;
     private CheckBox toggleHidePass;
     private TextView otpCurrentAge;
-    private EditText otpCode;
     private ImageButton prevFragBtn;
     private CountDownTimer otpAgeTimer;
 

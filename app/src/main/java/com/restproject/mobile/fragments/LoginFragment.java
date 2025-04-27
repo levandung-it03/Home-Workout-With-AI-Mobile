@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -31,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class LoginFragment extends Fragment {
     private EditText emailEdt;
@@ -56,19 +59,15 @@ public class LoginFragment extends Fragment {
 
         this.toggleHidePass.setOnClickListener(v -> togglePasswordEdt());
         submitLoginBtn.setOnClickListener(v -> {
-            String email = emailEdt.getText().toString();
-            String pass = passEdt.getText().toString();
-            if (!InputValidators.isValidStr(email) || !InputValidators.isValidStr(pass)) {
-                Toast.makeText(requireContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
+            String email = InputValidators.getEdtStr(emailEdt);
+            String pass = InputValidators.getEdtStr(passEdt);
+            String validatedRes = this.validateValues();
+            if (!Objects.isNull(validatedRes)) {
+                Toast.makeText(this.requireContext(), "Invalid " + validatedRes + "!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            try {
-                requestLogin(new JSONObject().put("email", email)
-                    .put("password", CryptoService.encrypt(pass)));
-            } catch (JSONException e) {
-                e.fillInStackTrace();
-                Toast.makeText(requireContext(), "Error parsing login data", Toast.LENGTH_SHORT).show();
-            }
+            requestLogin(new JSONObject(
+                Map.of("email", email, "password", CryptoService.encrypt(pass))));
         });
         registerBtn.setOnClickListener(v -> this.openRegisterFragment());
         forgotPassBtn.setOnClickListener(v -> this.openForgotPassFragment());
@@ -158,5 +157,21 @@ public class LoginFragment extends Fragment {
         };
         Volley.newRequestQueue(context)
             .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonObjectRequest, 30_000));
+    }
+
+
+    private String validateValues() {
+        if (!InputValidators.isValidStr(InputValidators.getEdtStr(this.emailEdt)))
+            return "Email";
+        if (InputValidators.getEdtStr(this.passEdt).length() < 6)
+            return "Password";
+        if (!Pattern.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$",
+            InputValidators.getEdtStr(this.emailEdt)))
+            return "Email";
+        if (!InputValidators.isValidStr(InputValidators.getEdtStr(this.emailEdt)))
+            return "Email";
+        if (!InputValidators.isValidStr(InputValidators.getEdtStr(this.passEdt)))
+            return "Password";
+        return null;
     }
 }

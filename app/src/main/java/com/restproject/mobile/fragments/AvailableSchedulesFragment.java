@@ -25,7 +25,6 @@ import com.restproject.mobile.activities.RequestEnums;
 import com.restproject.mobile.adapters.AvaiChedScheduleListAdapter;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.models.PaginatedDataResponse;
-import com.restproject.mobile.models.PreviewScheduleResponse;
 import com.restproject.mobile.models.Schedule;
 import com.restproject.mobile.utils.APIBuilderForGET;
 import com.restproject.mobile.utils.APIUtilsHelper;

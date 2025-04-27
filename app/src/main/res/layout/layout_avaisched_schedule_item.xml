@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
                 android:text="80₵"
-                android:background="@color/normal_gold"
+                android:background="@drawable/bg_coins"
                 android:textColor="@color/white"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp" />

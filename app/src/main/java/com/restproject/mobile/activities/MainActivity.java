@@ -1,8 +1,5 @@
 package com.restproject.mobile.activities;
 
-import static com.restproject.mobile.BuildConfig.BACKEND_ENDPOINT;
-import static com.restproject.mobile.BuildConfig.PRIVATE_AUTH_DIR;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,27 +7,16 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 import com.restproject.mobile.R;
 import com.restproject.mobile.adapters.ViewPaperAdapter;
-import com.restproject.mobile.api_helpers.RequestInterceptor;
-import com.restproject.mobile.exception.ApplicationException;
 import com.restproject.mobile.fragments.LoginFragment;
 import com.restproject.mobile.storage_helpers.InternalStorageHelper;
-import com.restproject.mobile.utils.APIUtilsHelper;
-
-import org.json.JSONObject;
-
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     public ViewPager2 viewPager;
@@ -126,12 +112,11 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.navBar_profile) {
                 context.viewPager.setCurrentItem(5);
                 context.viewPaperAdapter.refreshData(5);
-            } else if (item.getItemId() == R.id.navBar_logout) {
-                context.requestLogout();
             } else {
                 context.viewPager.setCurrentItem(0);
                 context.viewPaperAdapter.refreshData(0);
             }
+            this.toggleBtn.callOnClick();
             return true;
         });
         this.viewPager.setUserInputEnabled(false);
@@ -159,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        Menu menu = this.navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++)
+            if (menu.getItem(i).isChecked())
+                menu.getItem(i).setChecked(false);
         this.navigationView.getMenu().findItem(R.id.navBar_home).setChecked(true);
         this.toggleBtn.setVisibility(View.VISIBLE);
         this.toggleBtn.setScaleX(-1);
@@ -170,43 +159,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void requestLogout() {
-        try {
-            var context = this;
-            var reqData = new JSONObject(Map.of("token",
-                InternalStorageHelper.readIS(context, "tokens.txt").split(";")[1]));
-            var jsonReq = new JsonObjectRequest(
-                Request.Method.POST,
-                BACKEND_ENDPOINT + PRIVATE_AUTH_DIR + "/v1/logout",
-                reqData,
-                success -> {
-                    var response = APIUtilsHelper.mapVolleySuccess(success);
-                    Toast.makeText(this.getBaseContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
-                }, error ->
-                Toast.makeText(context, APIUtilsHelper.readErrorFromVolley(error).getMessage(),
-                    Toast.LENGTH_SHORT).show()
-            ) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    return RequestInterceptor.getPrivateAuthHeaders(context.getBaseContext());
-                }
-            };
-            Volley.newRequestQueue(context.getBaseContext())
-                .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonReq, 30_000));
-        } catch (ApplicationException e) {
-            e.fillInStackTrace();
-            Toast.makeText(this.getBaseContext(), "An Error occurred. Please restart app.",
-                Toast.LENGTH_SHORT).show();
-        }
-        try {
-            InternalStorageHelper.writeIS(this, "tokens.txt", "");
-        } catch (ApplicationException e) {
-            e.fillInStackTrace();
-            Toast.makeText(this.getBaseContext(), "An Error occurred. Please restart app.",
-                Toast.LENGTH_SHORT).show();
-        }
-        this.showLoginFragment();
-    }
 
     public void showLoginFragment() {
         this.navigationView.setVisibility(View.GONE);
