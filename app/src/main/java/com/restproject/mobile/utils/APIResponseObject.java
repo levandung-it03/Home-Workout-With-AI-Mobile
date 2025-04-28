@@ -1,10 +1,19 @@
 package com.restproject.mobile.utils;
 
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -97,10 +106,11 @@ public class APIResponseObject<T> {
         if (responseDateTime.contains("[")) {
             this.responseTime = new Gson().fromJson(responseDateTime, String[].class);
             this.parseTimeToDateTime();
-        } else
+        } else {
             this.responseDateTime = responseDateTime;
-    }
+        }
 
+    }
     @Override
     public String toString() {
         return "APIResponseObject{" +
