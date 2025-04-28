@@ -39,7 +39,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 null,
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -53,7 +53,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 new Gson().fromJson(response.get("data").toString(), List.class),
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -67,7 +67,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 new Gson().fromJson(response.get("data").toString(), LinkedTreeMap.class),
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -95,7 +95,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 response.get("data").toString(),
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -122,6 +122,7 @@ public class APIUtilsHelper {
             return new APIResponseObject<>("No network response from server");
         }
     }
+
     public static APIResponseObject<Void> readErrorFromVolleyStringTime(VolleyError error) {
         if (error.networkResponse != null && error.networkResponse.data != null) {
             String json = new String(error.networkResponse.data);

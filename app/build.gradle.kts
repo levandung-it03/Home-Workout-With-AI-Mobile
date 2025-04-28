@@ -18,7 +18,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BACKEND_ENDPOINT", "\"http://10.0.2.2:9999/api\"")
+        buildConfigField("String", "BACKEND_ENDPOINT", "\"http://10.0.2.2:9090/api\"")
         buildConfigField("String", "FASTAPI_ENDPOINT", "\"http://10.0.2.2:8000\"")
         buildConfigField("String", "PRIVATE_USER_DIR", "\"/private/user\"")
         buildConfigField("String", "PRIVATE_ADMIN_DIR", "\"/private/admin\"")

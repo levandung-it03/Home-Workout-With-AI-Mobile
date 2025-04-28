@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="5dp">
+
+    <TextView
+        android:id="@+id/page_coinsHistories_historiesListView_changingType"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/bg_black_histories"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:text="+ Deposit"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:background="@drawable/bg_coins_histories_under_item"
+        android:layout_marginTop="34dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:elevation="5dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="4dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:layout_alignParentStart="true">
+            <TextView
+                android:id="@+id/page_coinsHistories_historiesListView_coinsAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="80₵"
+                android:background="@drawable/bg_coins"
+                android:textColor="@color/white"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/page_coinsHistories_historiesListView_changingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="5/27/2025 4:14:25"
+            android:textStyle="bold"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+</RelativeLayout>

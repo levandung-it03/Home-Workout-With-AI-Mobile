@@ -58,12 +58,22 @@ public class ProfileFragment extends Fragment implements PrivateUIObject, Refres
         RelativeLayout logoutBtn = view.findViewById(R.id.page_profile_logoutVirtualBtn);
         Button updateUserInfoBtn = view.findViewById(R.id.page_profile_updateUserInfo);
         Button changePassword = view.findViewById(R.id.page_profile_changePassword);
+        Button coinsHistoriesBtn = view.findViewById(R.id.page_profile_getCoinsHistories);
 
-        updateUserInfoBtn.setOnClickListener(v -> showUserInfoDialog());
-        changePassword.setOnClickListener(v -> showChangePassDialog());
-        logoutBtn.setOnClickListener(v -> requestLogout());
+        updateUserInfoBtn.setOnClickListener(v -> this.showUserInfoDialog());
+        changePassword.setOnClickListener(v -> this.showChangePassDialog());
+        logoutBtn.setOnClickListener(v -> this.requestLogout());
+        coinsHistoriesBtn.setOnClickListener(v -> this.showListCoinsHistoriesDialog());
         this.requestUserInfo();
         return view;
+    }
+
+    private void showListCoinsHistoriesDialog() {
+        this.getParentFragmentManager()
+            .beginTransaction()
+            .replace(R.id.mainLayout_dialogContainer, new CoinsHistoriesFragment())
+            .commit();
+        ((MainActivity) this.requireActivity()).openDialog();
     }
 
     private void showChangePassDialog() {

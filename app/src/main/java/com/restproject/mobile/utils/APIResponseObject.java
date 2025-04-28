@@ -1,6 +1,8 @@
 package com.restproject.mobile.utils;
 
 
+import com.google.gson.Gson;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -21,21 +23,12 @@ public class APIResponseObject<T> {
         this.message = message;
     }
     public APIResponseObject(Integer applicationCode, @NotNull String message, Integer httpStatusCode,
-                             T data, String[] responseTime) {
+                             T data, String responseTime) {
         this.applicationCode = applicationCode;
         this.message = message;
         this.httpStatusCode = httpStatusCode;
         this.data = data;
-        this.responseTime = responseTime;
-        this.parseTimeToDateTime();
-    }
-
-    public APIResponseObject(Integer applicationCode, String message, Integer httpStatusCode, T data, String responseDateTime) {
-        this.applicationCode = applicationCode;
-        this.message = message;
-        this.httpStatusCode = httpStatusCode;
-        this.data = data;
-        this.responseDateTime = responseDateTime;
+        this.mappingDateFromMultipleTypes(responseTime);
     }
 
     public void parseTimeToDateTime() {
@@ -98,6 +91,14 @@ public class APIResponseObject<T> {
 
     public void setResponseDateTime(String responseDateTime) {
         this.responseDateTime = responseDateTime;
+    }
+
+    public void mappingDateFromMultipleTypes(String responseDateTime) {
+        if (responseDateTime.contains("[")) {
+            this.responseTime = new Gson().fromJson(responseDateTime, String[].class);
+            this.parseTimeToDateTime();
+        } else
+            this.responseDateTime = responseDateTime;
     }
 
     @Override

@@ -74,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/btn_black_grey_states"
+            android:textColor="@color/white"
             app:backgroundTint="@null"
             android:text="Update Information"
             android:textSize="16sp"
@@ -85,7 +86,18 @@
             android:layout_height="50dp"
             android:background="@drawable/btn_black_grey_states"
             app:backgroundTint="@null"
+            android:textColor="@color/white"
             android:text="Change Password"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/page_profile_getCoinsHistories"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_yellow_white_states"
+            app:backgroundTint="@null"
+            android:text="Coins Histories"
             android:textSize="16sp"
             android:layout_marginBottom="10dp"/>
 
