@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AvailableSchedulesFragment extends PaginatedListFragment implements PrivateUIObject {
+public class AvailableSchedulesFragment extends PaginatedListFragment implements PrivateUIObject, RefreshableFragment {
     private TextView explainTextView;
     private ListView scheduleListView;
     private AvaiChedScheduleListAdapter scheduleListAdapter;
@@ -137,5 +137,12 @@ public class AvailableSchedulesFragment extends PaginatedListFragment implements
     public void recall(JSONObject reqData, RequestEnums reqEnum) {
         if (reqEnum.equals(RequestEnums.AVAILABLE_SCHE_GET_ALL_SCHEDULE))
             this.requestMainUIListData(reqData);
+    }
+
+    @Override
+    public void refresh() {
+        requireActivity().runOnUiThread(() -> {
+            this.requestMainUIListData(new JSONObject(Map.of("page", 1)));
+        });
     }
 }

@@ -90,31 +90,28 @@ public class MainActivity extends AppCompatActivity {
         this.viewPaperAdapter = new ViewPaperAdapter(this);
         this.viewPager.setAdapter(this.viewPaperAdapter);
         this.navigationView.setNavigationItemSelectedListener(item -> {
-            Menu menu = context.navigationView.getMenu();
+            Menu menu = this.navigationView.getMenu();
             for (int i = 0; i < menu.size(); i++) {
                 if (menu.getItem(i).isChecked()) {
                     if (menu.getItem(i).equals(item)) return false;
                     menu.getItem(i).setChecked(false);
                 }
             }
-            closeDialogBtn.callOnClick();
+            this.closeDialogBtn.callOnClick();
             if (item.getItemId() == R.id.navBar_subscribeSchedule) {
-                context.viewPager.setCurrentItem(1);
-                context.viewPaperAdapter.refreshData(1);
+                this.viewPager.setCurrentItem(1);
+                this.viewPaperAdapter.refreshData(1);
             } else if (item.getItemId() == R.id.navBar_generateSchedule) {
-                context.viewPager.setCurrentItem(2);
+                this.viewPager.setCurrentItem(2);
             } else if (item.getItemId() == R.id.navBar_depositCoins) {
-                context.viewPager.setCurrentItem(3);
-                context.viewPaperAdapter.refreshData(3);
-            } else if (item.getItemId() == R.id.navBar_coinsHistories) {
-                context.viewPager.setCurrentItem(4);
-                context.viewPaperAdapter.refreshData(4);
+                this.viewPager.setCurrentItem(3);
+                this.viewPaperAdapter.refreshData(3);
             } else if (item.getItemId() == R.id.navBar_profile) {
-                context.viewPager.setCurrentItem(5);
-                context.viewPaperAdapter.refreshData(5);
+                this.viewPager.setCurrentItem(4);
+                this.viewPaperAdapter.refreshData(4);
             } else {
-                context.viewPager.setCurrentItem(0);
-                context.viewPaperAdapter.refreshData(0);
+                this.viewPager.setCurrentItem(0);
+                this.viewPaperAdapter.refreshData(0);
             }
             this.toggleBtn.callOnClick();
             return true;
@@ -133,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 else if (position == 3)
                     context.navigationView.getMenu().findItem(R.id.navBar_depositCoins).setChecked(true);
                 else if (position == 4)
-                    context.navigationView.getMenu().findItem(R.id.navBar_coinsHistories).setChecked(true);
-                else if (position == 5)
                     context.navigationView.getMenu().findItem(R.id.navBar_profile).setChecked(true);
             }
 
@@ -152,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
         this.toggleBtn.setVisibility(View.VISIBLE);
         this.toggleBtn.setScaleX(-1);
         this.toggleBtn.setOnClickListener(v -> {
-            context.isNavVisible = !context.isNavVisible;   //--Toggle status
-            context.navigationView.setVisibility(context.isNavVisible ? View.VISIBLE : View.GONE);
-            context.navOverlay.setVisibility(context.isNavVisible ? View.VISIBLE : View.GONE);
-            context.toggleBtn.setScaleX(context.isNavVisible ? 1 : -1);
+            this.isNavVisible = !this.isNavVisible;   //--Toggle status
+            this.navigationView.setVisibility(this.isNavVisible ? View.VISIBLE : View.GONE);
+            this.navOverlay.setVisibility(this.isNavVisible ? View.VISIBLE : View.GONE);
+            this.toggleBtn.setScaleX(this.isNavVisible ? 1 : -1);
         });
     }
 

@@ -36,7 +36,7 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-public class ProfileFragment extends Fragment implements PrivateUIObject {
+public class ProfileFragment extends Fragment implements PrivateUIObject, RefreshableFragment {
     private UserInfo data;
     private TextView fullName;
     private TextView coins;
@@ -170,5 +170,12 @@ public class ProfileFragment extends Fragment implements PrivateUIObject {
     public void recall(JSONObject reqData, RequestEnums reqEnum) {
         if (reqEnum.equals(RequestEnums.PROFILE_GET_USER_INFO))
             this.requestUserInfo();
+    }
+
+    @Override
+    public void refresh() {
+        requireActivity().runOnUiThread(() -> {
+            this.requestUserInfo();
+        });
     }
 }

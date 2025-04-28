@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HomeFragment extends Fragment implements PrivateUIObject {
+public class HomeFragment extends Fragment implements PrivateUIObject, RefreshableFragment {
     private TextView explainTextView;
     private Spinner scheduleTypeSpin;
     private ListView scheduleListView;
@@ -171,4 +171,10 @@ public class HomeFragment extends Fragment implements PrivateUIObject {
             this.requestSchedules(reqData);
     }
 
+    @Override
+    public void refresh() {
+        requireActivity().runOnUiThread(() -> {
+            this.requestSchedules(this.getDataToRequestSchedules());
+        });
+    }
 }
