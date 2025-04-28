@@ -1,6 +1,7 @@
 package com.restproject.mobile.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -139,9 +140,9 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
         }
 
         ArrayAdapter<OptionItem> ratioAdapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                updatedRatioOptions
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            updatedRatioOptions
         );
         ratioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRatio.setAdapter(ratioAdapter);
@@ -213,25 +214,25 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
     }
 
     private void setupSpinners() {
-
-        ArrayAdapter<OptionItem> aimAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, aimList);
+        ArrayAdapter<OptionItem> aimAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, aimList);
         spinnerAim.setAdapter(aimAdapter);
 
-        ArrayAdapter<OptionItem> genderAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, genderList);
+        ArrayAdapter<OptionItem> genderAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, genderList);
         spinnerGender.setAdapter(genderAdapter);
 
-        ArrayAdapter<OptionItem> levelAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, levelList);
+        ArrayAdapter<OptionItem> levelAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, levelList);
         spinnerLevel.setAdapter(levelAdapter);
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupValueButtons(Button btnDecrease, Button btnIncrease, EditText editText) {
-
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
         final Handler handler = new Handler();
         final int[] value = {0};
-
         Runnable increaseRunnable = new Runnable() {
             @Override
             public void run() {
@@ -321,9 +322,10 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST
+            && resultCode == Activity.RESULT_OK
+            && data != null && data.getData() != null) {
             imageUri = data.getData();
-
             // Log để kiểm tra
             Log.d("ImagePick", "Image selected: " + imageUri.toString());  // Log thành công
 
@@ -337,7 +339,8 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
     }
 
     String getFileName(Uri uri) {
-        Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = requireContext().getContentResolver()
+            .query(uri, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             String name = cursor.getString(nameIndex);
@@ -356,15 +359,13 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
             }
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
             return null;
         }
     }
 
     private void setupUploadButton() {
-        btnUploadImage.setOnClickListener(v -> {
-            openFileChooser();
-        });
+        btnUploadImage.setOnClickListener(v -> openFileChooser());
     }
 
     private void setupSubmitButton() {
@@ -378,11 +379,11 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
                 String session = editTextSession.getText().toString();
                 try {
                     requestSchedule(new JSONObject()
-                            .put("age", Integer.parseInt(age))
-                            .put("gender", selectedGender.getValue())
-                            .put("weight", Integer.parseInt(weight))
-                            .put("bodyFat", Float.parseFloat(bodyFatRatio))
-                            .put("session", Integer.parseInt(session))
+                        .put("age", Integer.parseInt(age))
+                        .put("gender", selectedGender.getValue())
+                        .put("weight", Integer.parseInt(weight))
+                        .put("bodyFat", Float.parseFloat(bodyFatRatio))
+                        .put("session", Integer.parseInt(session))
                     );
                 } catch (JSONException e) {
                     e.fillInStackTrace();
@@ -395,28 +396,28 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
 
     private void requestFastApi() {
         var context = this;
-        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + "/api" + BuildConfig.PRIVATE_USER_DIR + "/v1/cal-body-fat-detection";
+        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + BuildConfig.PRIVATE_USER_DIR + "/v1/cal-body-fat-detection";
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
-                Request.Method.POST,
-                reqUrl,
-                response -> {
-                    var res = APIUtilsHelper.mapVolleySuccess(response);
-                    bodyFatRatio = res.getData().get("bodyFatRatio").toString();
-                    tvHint.setText(bodyFatRatio);
-                    isCaculated = true;
-                    Toast.makeText(context.requireContext(), res.getMessage(), Toast.LENGTH_SHORT).show();
-                },
-                error -> {
-                    tvHint.setText(getString(R.string.upload_image_hint));
-                    imageView.setImageResource(R.drawable.body_template);
-                    APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
-                            .activity((AppCompatActivity) context.requireActivity())
-                            .context(context.getContext())
-                            .app(context)
-                            .requestEnum(RequestEnums.FAST_API_CAL_BODY)
-                            .error(error));
-                },
-                RequestInterceptor.getPrivateHeadersFastApi(context.requireContext(), "multipart/form-data")
+            Request.Method.POST,
+            reqUrl,
+            response -> {
+                var res = APIUtilsHelper.mapVolleySuccess(response);
+                bodyFatRatio = res.getData().get("bodyFatRatio").toString();
+                tvHint.setText(bodyFatRatio);
+                isCaculated = true;
+                Toast.makeText(context.requireContext(), res.getMessage(), Toast.LENGTH_SHORT).show();
+            },
+            error -> {
+                tvHint.setText(getString(R.string.upload_image_hint));
+                imageView.setImageResource(R.drawable.body_template);
+                APIUtilsHelper.handleSpecialPrivateVolleyRequestError(VolleyErrorHandler.builder()
+                    .activity((AppCompatActivity) context.requireActivity())
+                    .context(context.getContext())
+                    .app(context)
+                    .requestEnum(RequestEnums.FAST_API_CAL_BODY)
+                    .error(error));
+            },
+            RequestInterceptor.getPrivateHeadersFastApi(context.requireContext(), "multipart/form-data")
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -434,65 +435,58 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
                 return data;
             }
         };
-        Volley.newRequestQueue(context.requireContext()).add(APIUtilsHelper.setVolleyMultipartRequestTimeOut(multipartRequest, 30_000));
+        Volley.newRequestQueue(context.requireContext())
+            .add(APIUtilsHelper.setVolleyMultipartRequestTimeOut(multipartRequest, 30_000));
     }
 
     private void requestSchedule(JSONObject request) {
         var context = this;
-        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + "/api" + BuildConfig.PRIVATE_USER_DIR + "/v1/decide-schedule-id";
+        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + BuildConfig.PRIVATE_USER_DIR + "/v1/decide-schedule-id";
         var jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, reqUrl, request,
-                success -> {
-                    var res = APIUtilsHelper.mapVolleySuccess(success);
-                    Long scheduleId = ((Double) res.getData().get("scheduleId")).longValue();
-                     selectedLevel = (OptionItem) spinnerLevel.getSelectedItem();
-                     selectedAim = (OptionItem) spinnerAim.getSelectedItem();
+            success -> {
+                var res = APIUtilsHelper.mapVolleySuccess(success);
+                Long scheduleId = ((Double) res.getData().get("scheduleId")).longValue();
+                selectedLevel = (OptionItem) spinnerLevel.getSelectedItem();
+                selectedAim = (OptionItem) spinnerAim.getSelectedItem();
 
-                    Long aimType = Long.parseLong(selectedAim.getValueString());
-                    Long level = Long.parseLong(selectedLevel.getValueString());
-                    Long weight = Long.parseLong(editTextWeight.getText().toString());
-                    Float bodyFat = Float.parseFloat(bodyFatRatio);
+                Long aimType = Long.parseLong(selectedAim.getValueString());
+                Long level = Long.parseLong(selectedLevel.getValueString());
+                Long weight = Long.parseLong(editTextWeight.getText().toString());
+                Float bodyFat = Float.parseFloat(bodyFatRatio);
 
-                    Long weightAim;  //
-                    Long raito; //
+                Long weightAim;  //
+                Long raito; //
 
-                    if (aimType == 1) {  // Weight up
-                        selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
-                        weightAim = Long.parseLong("-1");
-                        raito = Long.parseLong(selectedRatio.getValueString());
-                    } else if (aimType == 0) { // weight maintain
-                        weightAim = Long.parseLong("-1");
-                        raito = Long.parseLong("-1");
-                    } else { //weight down
-                        selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
-                        raito = Long.parseLong(selectedRatio.getValueString());
-                        weightAim = Long.parseLong(editTextWeightAim.getText().toString());
-                    }
-
-                    this.getParentFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.mainLayout_dialogContainer,
-                                    new PreviewGenarateScheduleFragment(
-                                            scheduleId,
-                                            aimType,
-                                            level,
-                                            weight,
-                                            bodyFat,
-                                            raito,
-                                            weightAim
-                                    )
-                            )
-                            .commit();
-                    ((MainActivity) this.requireActivity()).openDialog();
-                },
-                error -> {
-                    APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
-                            .activity((AppCompatActivity) context.requireActivity())
-                            .context(context.getContext())
-                            .app(context)
-                            .requestData(request)
-                            .requestEnum(RequestEnums.FAST_API_CAL_BODY)
-                            .error(error));
+                if (aimType == 1) {  // Weight up
+                    selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
+                    weightAim = Long.parseLong("-1");
+                    raito = Long.parseLong(selectedRatio.getValueString());
+                } else if (aimType == 0) { // weight maintain
+                    weightAim = Long.parseLong("-1");
+                    raito = Long.parseLong("-1");
+                } else { //weight down
+                    selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
+                    raito = Long.parseLong(selectedRatio.getValueString());
+                    weightAim = Long.parseLong(editTextWeightAim.getText().toString());
                 }
+
+                this.getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainLayout_dialogContainer,
+                        new PreviewGenarateScheduleFragment(scheduleId, aimType, level, weight,
+                            bodyFat, raito, weightAim))
+                    .commit();
+                ((MainActivity) this.requireActivity()).openDialog();
+            },
+            error -> {
+                APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
+                    .activity((AppCompatActivity) context.requireActivity())
+                    .context(context.getContext())
+                    .app(context)
+                    .requestData(request)
+                    .requestEnum(RequestEnums.FAST_API_CAL_BODY)
+                    .error(error));
+            }
         ) {
             @Override
             public Map<String, String> getHeaders() {
@@ -500,7 +494,7 @@ public class GenerateSchedulesFragment extends Fragment implements PrivateUIObje
             }
         };
         Volley.newRequestQueue(context.requireContext())
-                .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonObjectRequest, 30_000));
+            .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonObjectRequest, 30_000));
     }
 
     private void requestDetailSchedule(JSONObject reqData) {
