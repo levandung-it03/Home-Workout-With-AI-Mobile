@@ -3,6 +3,7 @@ package com.restproject.mobile.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +14,7 @@ public class APIResponseObject<T> {
     private T data;
     private String[] responseTime;
     private String responseDateTime;
+
 
     public APIResponseObject() {}
     public APIResponseObject(String message) {
@@ -26,6 +28,14 @@ public class APIResponseObject<T> {
         this.data = data;
         this.responseTime = responseTime;
         this.parseTimeToDateTime();
+    }
+
+    public APIResponseObject(Integer applicationCode, String message, Integer httpStatusCode, T data, String responseDateTime) {
+        this.applicationCode = applicationCode;
+        this.message = message;
+        this.httpStatusCode = httpStatusCode;
+        this.data = data;
+        this.responseDateTime = responseDateTime;
     }
 
     public void parseTimeToDateTime() {
@@ -90,4 +100,15 @@ public class APIResponseObject<T> {
         this.responseDateTime = responseDateTime;
     }
 
+    @Override
+    public String toString() {
+        return "APIResponseObject{" +
+                "applicationCode=" + applicationCode +
+                ", message='" + message + '\'' +
+                ", httpStatusCode=" + httpStatusCode +
+                ", data=" + data +
+                ", responseTime=" + Arrays.toString(responseTime) +
+                ", responseDateTime='" + responseDateTime + '\'' +
+                '}';
+    }
 }
