@@ -14,7 +14,8 @@ public class APIResponseObject<T> {
     private String message;
     private Integer httpStatusCode;
     private T data;
-    private String[] responseTime;
+    private String responseTime;
+    private String[] responseTimeArr;
     private String responseDateTime;
 
 
@@ -28,18 +29,19 @@ public class APIResponseObject<T> {
         this.message = message;
         this.httpStatusCode = httpStatusCode;
         this.data = data;
+        this.responseTime = responseTime;
         this.mappingDateFromMultipleTypes(responseTime);
     }
 
     public void parseTimeToDateTime() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(
-            Integer.parseInt(this.responseTime[0]),
-            Integer.parseInt(this.responseTime[1]),
-            Integer.parseInt(this.responseTime[2]),
-            Integer.parseInt(this.responseTime[3]),
-            Integer.parseInt(this.responseTime[4]),
-            Integer.parseInt(this.responseTime[5])
+            Integer.parseInt(this.responseTimeArr[0]),
+            Integer.parseInt(this.responseTimeArr[1]),
+            Integer.parseInt(this.responseTimeArr[2]),
+            Integer.parseInt(this.responseTimeArr[3]),
+            Integer.parseInt(this.responseTimeArr[4]),
+            Integer.parseInt(this.responseTimeArr[5])
         );
         Date time = calendar.getTime();
         this.setResponseDateTime(DateTimeHelper.formatDateTimeToStr(time));
@@ -77,12 +79,12 @@ public class APIResponseObject<T> {
         this.data = data;
     }
 
-    public String[] getResponseTime() {
-        return responseTime;
+    public String[] getResponseTimeArr() {
+        return responseTimeArr;
     }
 
-    public void setResponseTime(String[] responseTime) {
-        this.responseTime = responseTime;
+    public void setResponseTimeArr(String[] responseTimeArr) {
+        this.responseTimeArr = responseTimeArr;
     }
 
     public String getResponseDateTime() {
@@ -93,12 +95,14 @@ public class APIResponseObject<T> {
         this.responseDateTime = responseDateTime;
     }
 
-    public void mappingDateFromMultipleTypes(String responseDateTime) {
-        if (responseDateTime.contains("[")) {
-            this.responseTime = new Gson().fromJson(responseDateTime, String[].class);
+    public void mappingDateFromMultipleTypes(String responseTime) {
+        if (responseTime.contains("[")) {
+            this.responseTimeArr = new Gson().fromJson(responseTime, String[].class);
             this.parseTimeToDateTime();
-        } else
-            this.responseDateTime = responseDateTime;
+        } else if (responseTime.contains(".")){
+            var dateTime = new Date((long) Double.parseDouble(responseTime) * 1000);
+            this.responseDateTime = DateTimeHelper.formatDateTimeToStr(dateTime);
+        }
     }
 
     @Override
@@ -108,7 +112,7 @@ public class APIResponseObject<T> {
                 ", message='" + message + '\'' +
                 ", httpStatusCode=" + httpStatusCode +
                 ", data=" + data +
-                ", responseTime=" + Arrays.toString(responseTime) +
+                ", responseTime=" + responseTime +
                 ", responseDateTime='" + responseDateTime + '\'' +
                 '}';
     }
