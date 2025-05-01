@@ -29,7 +29,7 @@ import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.utils.APIResponseObject;
 import com.restproject.mobile.utils.APIUtilsHelper;
 import com.restproject.mobile.utils.DateTimeHelper;
-import com.restproject.mobile.utils.InputValidators;
+import static com.restproject.mobile.utils.InputValidators.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,18 +42,11 @@ import java.util.regex.Pattern;
 public class RegisterFragment extends Fragment {
     private final HashMap<String, Integer> SPIN_OPTIONS = new HashMap<>();
     private final Integer[] otpTimeHolder = new Integer[1];
-    private ScrollView basicInfoFrame;
-    private ScrollView otpFrame;
-    private EditText firstName;
-    private EditText lastName;
-    private EditText dob;
+    private ScrollView basicInfoFrame, otpFrame;
+    private EditText firstName, lastName, dob, email, passEdt, rePassEdt, otpCode;
     private Spinner genderSpin;
-    private EditText email;
-    private EditText passEdt;
-    private EditText rePassEdt;
     private CheckBox toggleHidePass;
     private TextView otpCurrentAge;
-    private EditText otpCode;
     private ImageButton prevFragBtn;
     private CountDownTimer otpAgeTimer;
 
@@ -160,33 +153,33 @@ public class RegisterFragment extends Fragment {
     }
 
     private String validateValues() {
-        if (!InputValidators.isValidStr(this.email.getText().toString()))
+        if (!isValidStr(getEdtStr(this.email)))
             return "Email";
-        if (!InputValidators.isValidStr(this.firstName.getText().toString()))
+        if (!isValidStr(getEdtStr(this.firstName)))
             return "First Name";
-        if (!InputValidators.isValidStr(this.lastName.getText().toString()))
+        if (!isValidStr(getEdtStr(this.lastName)))
             return "Last Name";
-        if (!InputValidators.isValidStr(this.dob.getText().toString()))
+        if (!isValidStr(getEdtStr(this.dob)))
             return "Date of birth";
-        if (!InputValidators.isValidStr(this.passEdt.getText().toString()))
+        if (!isValidStr(getEdtStr(this.passEdt)))
             return "Password";
-        if (!InputValidators.isValidStr(this.rePassEdt.getText().toString()))
+        if (!isValidStr(getEdtStr(this.rePassEdt)))
             return "Password";
-        if (!this.passEdt.getText().toString().equals(this.rePassEdt.getText().toString()))
+        if (!getEdtStr(this.passEdt).equals(getEdtStr(this.rePassEdt)))
             return "Password";
-        if (!Pattern.matches("^[A-Za-zÀ-ỹ]{1,50}$", this.firstName.getText().toString()))
+        if (!Pattern.matches("^[A-Za-zÀ-ỹ]{1,50}$", getEdtStr(this.firstName)))
             return "First Name";
         if (!Pattern.matches("^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ]{1,50})*$",
-            this.lastName.getText().toString()))
+            getEdtStr(this.lastName)))
             return "Last Name";
         if (!Pattern.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$",
-            this.email.getText().toString()))
+            getEdtStr(this.email)))
             return "Email";
         //--Not need to check rePass if they're the same.
-        if (this.passEdt.getText().toString().length() < 6)
+        if (getEdtStr(this.passEdt).length() < 6)
             return "Password";
         if (!Pattern.matches("^([0-2][0-9]|(3)[0-1])/((0)[1-9]|(1)[0-2])/\\d{4}$",
-            this.dob.getText().toString()))
+            getEdtStr(this.dob)))
             return "Date of birth";
         return null;
     }
@@ -199,7 +192,7 @@ public class RegisterFragment extends Fragment {
         }
         var jsonRequest = new JsonObjectRequest(Request.Method.POST,
             BuildConfig.BACKEND_ENDPOINT + BuildConfig.PUBLIC_AUTH_DIR + "/v1/get-register-otp",
-            new JSONObject(Map.of("email", this.email.getText().toString())),
+            new JSONObject(Map.of("email", getEdtStr(this.email))),
             success -> {
                 var response = APIUtilsHelper.mapVolleySuccess(success);
                 if (Objects.isNull(response.getData())) {
@@ -240,10 +233,10 @@ public class RegisterFragment extends Fragment {
     private void confirmOtp() {
         JSONObject jsonReqObj;
         try {
-            String otpCode = this.otpCode.getText().toString().toUpperCase();
+            String otpCode = getEdtStr(this.otpCode).toUpperCase();
             if (otpCode.isEmpty()) throw new NullPointerException();
             jsonReqObj = new JSONObject()
-                .put("email", this.email.getText().toString())
+                .put("email", getEdtStr(this.email))
                 .put("otpCode", otpCode);
         } catch (NullPointerException | JSONException e) {
             e.fillInStackTrace();
@@ -274,15 +267,15 @@ public class RegisterFragment extends Fragment {
 
     private void requestRegister(String hiddenOtp) {
         HashMap<String, Object> fullDataToRegister = new HashMap<String, Object>(Map.of(
-            "firstName", this.firstName.getText().toString(),
-            "lastName", this.lastName.getText().toString(),
+            "firstName", getEdtStr(this.firstName),
+            "lastName", getEdtStr(this.lastName),
             "genderId", Objects.requireNonNull(
                 this.SPIN_OPTIONS.get(this.genderSpin.getSelectedItem().toString())),
-            "email", this.email.getText().toString(),
-            "password", this.passEdt.getText().toString(),
+            "email", getEdtStr(this.email),
+            "password", getEdtStr(this.passEdt),
             "otpCode", hiddenOtp
         ));
-        String acceptedDob = DateTimeHelper.formatDateTimeFromEdt(this.dob.getText().toString());
+        String acceptedDob = DateTimeHelper.formatDateTimeFromEdt(getEdtStr(this.dob));
         if (acceptedDob == null) {
             Toast.makeText(this.requireContext(), "Invalid Date of birth", Toast.LENGTH_SHORT).show();
             return;

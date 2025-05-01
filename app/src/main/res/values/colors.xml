@@ -14,6 +14,7 @@
     <color name="colorPrimary">#000000</color>
     <color name="normal_gold">#AE7A0B</color>
     <color name="light_gold">#FFECB3</color>
+    <color name="yellow">#FFB600</color>
     <color name="normal_green_tree">#006064</color>
     <color name="light_green_tree">#B2EBF2</color>
 </resources>

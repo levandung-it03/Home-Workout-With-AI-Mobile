@@ -237,31 +237,10 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="#CCCCCC" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Choose Your Aim:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -272,54 +251,7 @@
                     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        card_view:cardElevation="4dp">
-                        <Spinner
-                            android:id="@+id/page_availableSched_dialog_chooseAimSpin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:paddingLeft="8dp"
-                            android:paddingTop="0dp"
-                            android:paddingBottom="0dp"
-                            android:textSize="13sp" />
-                    </androidx.cardview.widget.CardView>
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Level's Difficulty:"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_spinner"
-                    android:layout_marginStart="5dp"
-                    android:padding="1dp">
-                    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        card_view:cardElevation="4dp">
-                        <Spinner
-                            android:id="@+id/page_availableSched_dialog_chooseLevelSpin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:paddingLeft="8dp"
-                            android:paddingTop="0dp"
-                            android:paddingRight="8dp"
-                            android:paddingBottom="0dp"
-                            android:textSize="13sp" />
-                    </androidx.cardview.widget.CardView>
+                        card_view:cardElevation="4dp"/>
                 </FrameLayout>
             </LinearLayout>
 
@@ -334,6 +266,5 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:backgroundTint="@null" />
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.restproject.mobile.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -9,6 +10,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.restproject.mobile.R;
@@ -36,7 +39,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 null,
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -50,7 +53,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 new Gson().fromJson(response.get("data").toString(), List.class),
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -64,7 +67,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 new Gson().fromJson(response.get("data").toString(), LinkedTreeMap.class),
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -78,7 +81,7 @@ public class APIUtilsHelper {
                 response.get("message").toString(),
                 Integer.parseInt(response.get("httpStatusCode").toString()),
                 response.get("data").toString(),
-                new Gson().fromJson(response.get("responseTime").toString(), String[].class)
+                response.get("responseTime").toString()
             );
         } catch (Exception e) {
             return new APIResponseObject<>("Error from server to read response");
@@ -103,6 +106,59 @@ public class APIUtilsHelper {
             }
         } else {
             return new APIResponseObject<>("No network response from server");
+        }
+    }
+
+    /**
+     * This method will handle Private Requests, and not disrupt the Session when reach another err.
+     * @param info: Basic Info
+     */
+    public static void handleSpecialPrivateVolleyRequestError(VolleyErrorHandler info) {
+        APIResponseObject<Void> response = APIUtilsHelper.readErrorFromVolley(info.getError());
+        if (response.getApplicationCode() != null) {
+            if (response.getApplicationCode().equals(EXPIRED_TKN_ERR_CODE)) {
+                try {
+                    String[] tokens = readIS(info.getContext(), "tokens.txt").split(",");
+                    var jsonRequestObject = new JsonObjectRequest(
+                        Request.Method.POST,
+                        BACKEND_ENDPOINT + PRIVATE_AUTH_DIR + "/v1/refresh-token",
+                        new JSONObject().put("token", tokens[1]),
+                        success -> {
+                            var res = APIUtilsHelper.mapVolleySuccess(success);
+                            APIUtilsHelper.saveTokensAfterAuthentication(info.getContext(), Map.of(
+                                "accessToken", Objects.requireNonNull(res.getData().get("token")).toString(),
+                                "refreshToken", tokens[0]
+                            ));
+                            System.out.println("From refreshAccessToken(): " + res.getMessage());
+                            info.getApp().recall(info.getRequestData(), info.getRequestEnum());
+                        },
+                        error -> {
+                            var e = new Exception("Application is wrong, please restart it");
+                            //--If Refresh-Token is also expired, inflate Login-Fragment.
+                            if (readErrorFromVolley(error).getApplicationCode().equals(EXPIRED_TKN_ERR_CODE))
+                                e = new Exception("Too long Login session, login in again!");
+                            //--If something is wrong from Backend-System, inflate Login-Fragment.
+                            clearInterStorageAndToast(e, info);
+                        }
+                    ) {
+                        //--Change Headers to put Refresh-Token as Authorization Bearer.
+                        @Override
+                        public Map<String, String> getHeaders() {
+                            return RequestInterceptor.getPrivateAuthHeaders(info.getContext());
+                        }
+                    };
+                    //--Calling request.
+                    Volley
+                        .newRequestQueue(info.getContext())
+                        .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonRequestObject, 30_000));
+                } catch (Exception e) {
+                    clearInterStorageAndToast(e, info);
+                }
+            } else {
+                Toast.makeText(info.getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            clearInterStorageAndToast(new Exception("Application is wrong, please restart it"), info);
         }
     }
 
@@ -157,6 +213,7 @@ public class APIUtilsHelper {
 
     public static void clearInterStorageAndToast(Exception e, VolleyErrorHandler info) {
         e.fillInStackTrace();
+        Log.d("ERROR TAG", e.getMessage());
         Toast.makeText(info.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
     //--If something is wrong in Mobile, inflate Login-Fragment.
         InternalStorageHelper.writeIS(info.getContext(), "tokens.txt", "");

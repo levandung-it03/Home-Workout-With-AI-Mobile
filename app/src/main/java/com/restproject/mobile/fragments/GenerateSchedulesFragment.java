@@ -1,16 +1,13 @@
 package com.restproject.mobile.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.InputType;
 import android.util.Log;
@@ -23,33 +20,34 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.restproject.mobile.BuildConfig;
 import com.restproject.mobile.R;
 import com.restproject.mobile.activities.MainActivity;
+import com.restproject.mobile.activities.PrivateUIObject;
+import com.restproject.mobile.activities.RequestEnums;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.models.OptionItem;
-import com.restproject.mobile.utils.APIResponseObject;
 import com.restproject.mobile.utils.APIUtilsHelper;
-import com.restproject.mobile.utils.CryptoService;
+import com.restproject.mobile.utils.VolleyErrorHandler;
 import com.restproject.mobile.utils.VolleyMultipartRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -57,15 +55,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class GenerateSchedulesFragment extends Fragment {
+public class GenerateSchedulesFragment extends Fragment implements PrivateUIObject {
 
     private Spinner spinnerAim, spinnerGender, spinnerLevel, spinnerRatio;
-    private Button btnUploadImage, btnSubmit,btnDecreaseWeight,btnIncreaseWeight, btnDecreaseAge, btnIncreaseAge, btnDecreaseSession, btnIncreaseSesison;
-    EditText editTextAge, editTextWeight, editTextSession;
+    private Button btnUploadImage, btnSubmit, btnDecreaseWeight, btnIncreaseWeight, btnDecreaseAge, btnIncreaseAge, btnDecreaseSession, btnIncreaseSesison, btnDecreaseWeightAim, btnIncreaseWeightAim;
+    private EditText editTextAge, editTextWeight, editTextSession, editTextWeightAim;
     private ImageView imageView;
     private Uri imageUri;
+    private TextView tvHint, tvRatio, tvWeightAim;
     private static final int PICK_IMAGE_REQUEST = 1;
-
+    private boolean isCaculated;
+    private String bodyFatRatio;
+    private LinearLayout linearLayoutWeightAim;
 
     ArrayList<OptionItem> aimList = new ArrayList<>();
     ArrayList<OptionItem> genderList = new ArrayList<>();
@@ -73,6 +74,16 @@ public class GenerateSchedulesFragment extends Fragment {
     ArrayList<OptionItem> weightDownAimRatioOptions = new ArrayList<>();
     ArrayList<OptionItem> weightUpAimRatioOptions = new ArrayList<>();
     OptionItem selectedGender;
+    OptionItem selectedAim;
+    OptionItem selectedLevel;
+    OptionItem selectedRatio;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(false);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,6 +100,7 @@ public class GenerateSchedulesFragment extends Fragment {
         setupValueButtons(btnDecreaseAge, btnIncreaseAge, editTextAge);
         setupValueButtons(btnDecreaseWeight, btnIncreaseWeight, editTextWeight);
         setupValueButtons(btnDecreaseSession, btnIncreaseSesison, editTextSession);
+        setupValueButtons(btnDecreaseWeightAim, btnIncreaseWeightAim, editTextWeightAim);
         setupUploadButton();
         setupSubmitButton();
 
@@ -106,19 +118,31 @@ public class GenerateSchedulesFragment extends Fragment {
         });
 
     }
+
     private void updateSpinnerRatio(int aimValue) {
         ArrayList<OptionItem> updatedRatioOptions = new ArrayList<>();
 
         if (aimValue == 1) {  // Weight up
             updatedRatioOptions.addAll(weightUpAimRatioOptions);
-        } else {
+            linearLayoutWeightAim.setVisibility(View.GONE);
+            tvWeightAim.setVisibility(View.GONE);
+            spinnerRatio.setVisibility(View.VISIBLE);
+            tvRatio.setVisibility(View.VISIBLE);
+        } else if (aimValue == 0) { // weight maintain
+            spinnerRatio.setVisibility(View.GONE);
+            tvRatio.setVisibility(View.GONE);
+            linearLayoutWeightAim.setVisibility(View.GONE);
+            tvWeightAim.setVisibility(View.GONE);
+        } else { //weight down
             updatedRatioOptions.addAll(weightDownAimRatioOptions);
+            linearLayoutWeightAim.setVisibility(View.VISIBLE);
+            tvWeightAim.setVisibility(View.VISIBLE);
         }
 
         ArrayAdapter<OptionItem> ratioAdapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                updatedRatioOptions
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            updatedRatioOptions
         );
         ratioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRatio.setAdapter(ratioAdapter);
@@ -127,9 +151,9 @@ public class GenerateSchedulesFragment extends Fragment {
     private void setupAdapter() {
         // handle call api get this data in the future :)
         //aim
-        aimList.add(new OptionItem(-1,"Weight down"));
-        aimList.add(new OptionItem(0,"Maintain weight"));
-        aimList.add(new OptionItem(1,"Weight up"));
+        aimList.add(new OptionItem(-1, "Weight down"));
+        aimList.add(new OptionItem(0, "Maintain weight"));
+        aimList.add(new OptionItem(1, "Weight up"));
 
         //gender
         genderList.add(new OptionItem(0, "Female"));
@@ -174,29 +198,41 @@ public class GenerateSchedulesFragment extends Fragment {
         btnDecreaseSession = view.findViewById(R.id.btnDecreaseSession);
         btnIncreaseSesison = view.findViewById(R.id.btnIncreaseSession);
         editTextSession = view.findViewById(R.id.textValueSession);
+
+        btnDecreaseWeightAim = view.findViewById(R.id.btnDecreaseWeightAim);
+        btnIncreaseWeightAim = view.findViewById(R.id.btnIncreaseWeightAim);
+        editTextWeightAim = view.findViewById(R.id.textValueWeightAim);
+
+        tvHint = view.findViewById(R.id.textHintUploadImage);
+
+        isCaculated = false;
+        bodyFatRatio = "";
+        tvRatio = view.findViewById(R.id.textRatio);
+        tvWeightAim = view.findViewById(R.id.textWeightAim);
+        linearLayoutWeightAim = view.findViewById(R.id.layoutWeightAim);
+
     }
 
     private void setupSpinners() {
-
-        ArrayAdapter<OptionItem> aimAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, aimList);
+        ArrayAdapter<OptionItem> aimAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, aimList);
         spinnerAim.setAdapter(aimAdapter);
 
-        ArrayAdapter<OptionItem> genderAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, genderList);
+        ArrayAdapter<OptionItem> genderAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, genderList);
         spinnerGender.setAdapter(genderAdapter);
 
-        ArrayAdapter<OptionItem> levelAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, levelList);
+        ArrayAdapter<OptionItem> levelAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_spinner_dropdown_item, levelList);
         spinnerLevel.setAdapter(levelAdapter);
 
     }
 
-
+    @SuppressLint("ClickableViewAccessibility")
     private void setupValueButtons(Button btnDecrease, Button btnIncrease, EditText editText) {
-
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
         final Handler handler = new Handler();
         final int[] value = {0};
-
         Runnable increaseRunnable = new Runnable() {
             @Override
             public void run() {
@@ -286,9 +322,10 @@ public class GenerateSchedulesFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST
+            && resultCode == Activity.RESULT_OK
+            && data != null && data.getData() != null) {
             imageUri = data.getData();
-
             // Log để kiểm tra
             Log.d("ImagePick", "Image selected: " + imageUri.toString());  // Log thành công
 
@@ -301,47 +338,9 @@ public class GenerateSchedulesFragment extends Fragment {
         }
     }
 
-    private void requestFastApi() {
-        var context = this.requireContext();
-        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + BuildConfig.PRIVATE_USER_DIR+ "/v1/cal-body-fat-detection";
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
-                Request.Method.POST,
-                reqUrl,
-                response -> {
-                    // response là JSONObject
-                    Log.d("UPLOAD", "Response: " + response.toString());
-                },
-                error -> {
-                    Log.d("UPLOAD", "ERROR full: " + error.toString());
-                    if (error.networkResponse != null) {
-                        Log.d("UPLOAD", "Status Code: " + error.networkResponse.statusCode);
-                        Log.d("UPLOAD", "Response Data: " + new String(error.networkResponse.data));
-                    }
-
-                },
-                RequestInterceptor.getPrivateHeadersFastApi(context, "multipart/form-data")
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                OptionItem selectedGender = (OptionItem) spinnerGender.getSelectedItem();
-                params.put("gender",    selectedGender.getValueString());
-                return params;
-            }
-
-            @Override
-            protected Map<String, DataPart> getByteData() {
-                Map<String, DataPart> data = new HashMap<>();
-                byte[] imageBytes = readBytesFromUri(imageUri);
-                data.put("image", new DataPart(getFileName(imageUri), imageBytes, "image/jpeg"));
-                return data;
-            }
-        };
-        Volley.newRequestQueue(context).add(APIUtilsHelper.setVolleyMultipartRequestTimeOut(multipartRequest, 30_000));
-    }
-
     String getFileName(Uri uri) {
-        Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = requireContext().getContentResolver()
+            .query(uri, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             String name = cursor.getString(nameIndex);
@@ -360,20 +359,153 @@ public class GenerateSchedulesFragment extends Fragment {
             }
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
             return null;
         }
     }
+
     private void setupUploadButton() {
-        btnUploadImage.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Upload...", Toast.LENGTH_SHORT).show();
-            openFileChooser();
-        });
+        btnUploadImage.setOnClickListener(v -> openFileChooser());
     }
 
     private void setupSubmitButton() {
         btnSubmit.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Submit successful!", Toast.LENGTH_SHORT).show();
+            if (isCaculated) {
+                selectedAim = (OptionItem) spinnerAim.getSelectedItem();
+                selectedLevel = (OptionItem) spinnerLevel.getSelectedItem();
+                selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
+                String age = editTextAge.getText().toString();
+                String weight = editTextWeight.getText().toString();
+                String session = editTextSession.getText().toString();
+                try {
+                    requestSchedule(new JSONObject()
+                        .put("age", Integer.parseInt(age))
+                        .put("gender", selectedGender.getValue())
+                        .put("weight", Integer.parseInt(weight))
+                        .put("bodyFat", Float.parseFloat(bodyFatRatio))
+                        .put("session", Integer.parseInt(session))
+                    );
+                } catch (JSONException e) {
+                    e.fillInStackTrace();
+                    Toast.makeText(requireContext(), "Error request schedule", Toast.LENGTH_SHORT).show();
+                }
+            } else
+                Toast.makeText(requireContext(), "Must calculate first!!!!!!!", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void requestFastApi() {
+        var context = this;
+        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + BuildConfig.PRIVATE_USER_DIR + "/v1/cal-body-fat-detection";
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
+            Request.Method.POST,
+            reqUrl,
+            response -> {
+                var res = APIUtilsHelper.mapVolleySuccess(response);
+                bodyFatRatio = res.getData().get("bodyFatRatio").toString();
+                tvHint.setText(bodyFatRatio);
+                isCaculated = true;
+                Toast.makeText(context.requireContext(), res.getMessage(), Toast.LENGTH_SHORT).show();
+            },
+            error -> {
+                tvHint.setText(getString(R.string.upload_image_hint));
+                imageView.setImageResource(R.drawable.body_template);
+                APIUtilsHelper.handleSpecialPrivateVolleyRequestError(VolleyErrorHandler.builder()
+                    .activity((AppCompatActivity) context.requireActivity())
+                    .context(context.getContext())
+                    .app(context)
+                    .requestEnum(RequestEnums.FAST_API_CAL_BODY)
+                    .error(error));
+            },
+            RequestInterceptor.getPrivateHeadersFastApi(context.requireContext(), "multipart/form-data")
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                OptionItem selectedGender = (OptionItem) spinnerGender.getSelectedItem();
+                params.put("gender", selectedGender.getValueString());
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> data = new HashMap<>();
+                byte[] imageBytes = readBytesFromUri(imageUri);
+                data.put("image", new DataPart(getFileName(imageUri), imageBytes, "image/jpeg"));
+                return data;
+            }
+        };
+        Volley.newRequestQueue(context.requireContext())
+            .add(APIUtilsHelper.setVolleyMultipartRequestTimeOut(multipartRequest, 30_000));
+    }
+
+    private void requestSchedule(JSONObject request) {
+        var context = this;
+        var reqUrl = BuildConfig.FASTAPI_ENDPOINT + BuildConfig.PRIVATE_USER_DIR + "/v1/decide-schedule-id";
+        var jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, reqUrl, request,
+            success -> {
+                var res = APIUtilsHelper.mapVolleySuccess(success);
+                Long scheduleId = ((Double) res.getData().get("scheduleId")).longValue();
+                selectedLevel = (OptionItem) spinnerLevel.getSelectedItem();
+                selectedAim = (OptionItem) spinnerAim.getSelectedItem();
+
+                Long aimType = Long.parseLong(selectedAim.getValueString());
+                Long level = Long.parseLong(selectedLevel.getValueString());
+                Long weight = Long.parseLong(editTextWeight.getText().toString());
+                Float bodyFat = Float.parseFloat(bodyFatRatio);
+
+                Long weightAim;  //
+                Long raito; //
+
+                if (aimType == 1) {  // Weight up
+                    selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
+                    weightAim = Long.parseLong("-1");
+                    raito = Long.parseLong(selectedRatio.getValueString());
+                } else if (aimType == 0) { // weight maintain
+                    weightAim = Long.parseLong("-1");
+                    raito = Long.parseLong("-1");
+                } else { //weight down
+                    selectedRatio = (OptionItem) spinnerRatio.getSelectedItem();
+                    raito = Long.parseLong(selectedRatio.getValueString());
+                    weightAim = Long.parseLong(editTextWeightAim.getText().toString());
+                }
+
+                this.getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainLayout_dialogContainer,
+                        new PreviewGenarateScheduleFragment(scheduleId, aimType, level, weight,
+                            bodyFat, raito, weightAim))
+                    .commit();
+                ((MainActivity) this.requireActivity()).openDialog();
+            },
+            error -> {
+                APIUtilsHelper.handlePrivateVolleyRequestError(VolleyErrorHandler.builder()
+                    .activity((AppCompatActivity) context.requireActivity())
+                    .context(context.getContext())
+                    .app(context)
+                    .requestData(request)
+                    .requestEnum(RequestEnums.FAST_API_CAL_BODY)
+                    .error(error));
+            }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return RequestInterceptor.getPrivateHeaders(context.requireContext());
+            }
+        };
+        Volley.newRequestQueue(context.requireContext())
+            .add(APIUtilsHelper.setVolleyRequestTimeOut(jsonObjectRequest, 30_000));
+    }
+
+    private void requestDetailSchedule(JSONObject reqData) {
+    }
+
+    @Override
+    public void recall(JSONObject reqData, RequestEnums reqEnum) {
+        if (reqEnum.equals(RequestEnums.FAST_API_CAL_BODY))
+            this.requestFastApi();
+        if (reqEnum.equals(RequestEnums.GEN_SCHE_GET_SCHEDULE_DETAIL))
+            this.requestDetailSchedule(reqData);
+
     }
 }

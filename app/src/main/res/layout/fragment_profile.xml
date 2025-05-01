@@ -1,39 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ProfileFragment"
-    android:orientation="vertical"
-    android:paddingTop="20dp"
     android:paddingBottom="40dp">
 
-
-    <EditText
-        android:id="@+id/page_profile_lastName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textSize="16sp"
-        android:background="@drawable/edt_white_states"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/black"
-        android:textColorHint="@color/normal_grey"
-        android:paddingLeft="10dp"
-        android:hint="Last Name"
-        android:layout_marginBottom="10dp" />
+        android:layout_height="91dp"
+        android:orientation="vertical"
+        android:background="@color/black"/>
 
-    <EditText
-        android:id="@+id/page_profile_firstName"
+    <LinearLayout
+        android:id="@+id/page_profile_d1b"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textSize="16sp"
-        android:background="@drawable/edt_white_states"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/black"
-        android:textColorHint="@color/normal_grey"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="25dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="10dp"
-        android:hint="First Name"
-        android:layout_marginBottom="10dp" />
+        android:paddingRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/baseline_account_circle_24"
+            android:background="@drawable/bg_account_vir_img"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp">
+            <TextView
+                android:id="@+id/page_profile_fullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lê Văn Dũng"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+            <TextView
+                android:id="@+id/page_profile_coins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="80₵"
+                android:background="@drawable/bg_coins"
+                android:textColor="@color/white"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="5dp"/>
+        </RelativeLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/page_profile_d2b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_below="@+id/page_profile_d1b"
+        android:layout_alignParentStart="true">
+        <Button
+            android:id="@+id/page_profile_updateUserInfo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_black_grey_states"
+            android:textColor="@color/white"
+            app:backgroundTint="@null"
+            android:text="Update Information"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/page_profile_changePassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_black_grey_states"
+            app:backgroundTint="@null"
+            android:textColor="@color/white"
+            android:text="Change Password"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/page_profile_getCoinsHistories"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_yellow_white_states"
+            app:backgroundTint="@null"
+            android:text="Coins Histories"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <RelativeLayout
+            android:id="@+id/page_profile_logoutVirtualBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_white_grey_states">
+            <TextView
+                android:id="@+id/page_profile_logoutTxtBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="10dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logout_24px"
+                android:layout_toEndOf="@+id/page_profile_logoutTxtBtn"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

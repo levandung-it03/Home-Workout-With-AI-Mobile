@@ -76,7 +76,6 @@
                     android:inputType="textPersonName"
                     android:textColorHint="@color/normal_grey"
                     android:textColor="@color/black"
-                    android:paddingLeft="10dp"
                     android:hint="First Name"
                     android:layout_marginBottom="10dp" />
 
@@ -89,7 +88,6 @@
                     android:inputType="textPersonName"
                     android:textColor="@color/black"
                     android:textColorHint="@color/normal_grey"
-                    android:paddingLeft="10dp"
                     android:hint="Last Name"
                     android:layout_marginBottom="10dp" />
 
@@ -102,8 +100,7 @@
                     android:inputType="date"
                     android:textColor="@color/black"
                     android:textColorHint="@color/normal_grey"
-                    android:paddingLeft="10dp"
-                    android:hint="Date of birth"
+                    android:hint="Date of Birth"
                     android:layout_marginBottom="10dp" />
 
                 <Spinner
@@ -114,7 +111,6 @@
                     android:background="@drawable/edt_white_states"
                     android:inputType="date"
                     android:textColor="@color/black"
-                    android:paddingLeft="10dp"
                     android:hint="Birthday: date/month/year"
                     android:layout_marginBottom="10dp" />
 
@@ -127,7 +123,6 @@
                     android:inputType="textEmailAddress"
                     android:textColorHint="@color/normal_grey"
                     android:textColor="@color/black"
-                    android:paddingLeft="10dp"
                     android:hint="Email"
                     android:layout_marginBottom="10dp" />
 
@@ -141,7 +136,6 @@
                     android:hint="Password"
                     android:textColor="@color/black"
                     android:inputType="textPassword"
-                    android:paddingStart="10dp"
                     android:layout_marginBottom="10dp"  />
 
                 <EditText
@@ -153,8 +147,7 @@
                     android:textColorHint="@color/normal_grey"
                     android:hint="Retype Password"
                     android:textColor="@color/black"
-                    android:inputType="textPassword"
-                    android:paddingStart="10dp" />
+                    android:inputType="textPassword"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -246,7 +239,6 @@
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textColorHint="@color/normal_grey"
-                    android:paddingLeft="10dp"
                     android:hint="OTPCODE"
                     android:layout_marginBottom="20dp"
                     android:textAlignment="center"/>

@@ -17,15 +17,7 @@
         android:title="Coins"
         android:icon="@drawable/credit_card_24px"/>
     <item
-        android:id="@+id/navBar_coinsHistories"
-        android:title="History"
-        android:icon="@drawable/description_24px"/>
-    <item
         android:id="@+id/navBar_profile"
         android:title="Profile"
         android:icon="@drawable/baseline_account_circle_24"/>
-    <item
-        android:id="@+id/navBar_logout"
-        android:title="Logout"
-        android:icon="@drawable/logout_24px"/>
 </menu>
