@@ -1,6 +1,7 @@
 package com.restproject.mobile.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,10 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
 import com.restproject.mobile.R;
 import com.restproject.mobile.api_helpers.RequestInterceptor;
 import com.restproject.mobile.exception.ApplicationException;
@@ -25,8 +23,10 @@ import static com.restproject.mobile.BuildConfig.*;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+import android.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -225,11 +225,20 @@ public class APIUtilsHelper {
 
     public static boolean saveTokensAfterAuthentication(Context context, Map<String, Object> response) {
         try {
-            String tokens = Objects.requireNonNull(response.get("refreshToken")) + ";"
-                + Objects.requireNonNull(response.get("accessToken"));
-            writeIS(context, "tokens.txt", tokens);
+            if (Objects.isNull(response.get("accessToken"))
+                || Objects.isNull(response.get("refreshToken")))
+                throw new ApplicationException("Can't revoke token from response");
+            String accessToken = Objects.requireNonNull(response.get("accessToken")).toString();
+            String refreshToken = Objects.requireNonNull(response.get("refreshToken")).toString();
+            var payloadMap = APIUtilsHelper.readJwtPayload(accessToken);
+            if (payloadMap.get("scope").toUpperCase(Locale.ROOT).contains("ADMIN"))
+                throw new SecurityException("User role admin can not access mobile device");
+            writeIS(context, "tokens.txt", refreshToken + ";" + accessToken);
             return true;
-        } catch (ApplicationException e) {
+        } catch(SecurityException e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
+        } catch (NullPointerException | ApplicationException e) {
             System.out.println(e.getMessage());
             Toast.makeText(context, "Application is wrong, please restart it", Toast.LENGTH_SHORT).show();
             return false;
@@ -243,6 +252,7 @@ public class APIUtilsHelper {
         ));
         return request;
     }
+
     public static VolleyMultipartRequest setVolleyMultipartRequestTimeOut(VolleyMultipartRequest request, int timeout) {
         request.setRetryPolicy(new DefaultRetryPolicy(timeout,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -251,6 +261,19 @@ public class APIUtilsHelper {
         return request;
     }
 
-
-
+    private static HashMap<String, String> readJwtPayload(String token) {
+        var result = new HashMap<String, String>();
+        var encodedPayload = token.split("\\.")[1];
+        int paddingLength = 4 - encodedPayload.length() % 4;
+        if (paddingLength < 4)
+            encodedPayload += "=".repeat(paddingLength);
+        byte[] bytesPayload = Base64.decode(encodedPayload, android.util.Base64.DEFAULT);
+        var jsonPayload = new String(bytesPayload);
+        var pairsOfPayload = jsonPayload.replaceAll("[{}]", "").split(",");
+        for (String pair: pairsOfPayload) {
+            var keyValue = pair.replaceAll("[\"]", "").split(":");
+            result.put(keyValue[0], keyValue[1]);
+        }
+        return result;
+    }
 }
