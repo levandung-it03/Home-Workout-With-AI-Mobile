@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +98,21 @@ public class DetailScheduleForHomeFragment extends Fragment implements PrivateUI
         this.basicInfoBlock3 = view.findViewById(R.id.page_home_dialog_d3b);
         this.basicInfoBlock5 = view.findViewById(R.id.page_home_dialog_d5b);
 
+        // Xử lý khi người dùng click vào một session trong danh sách
+        sessionList.setOnItemClickListener((parent, view1, position, id) -> {
+            HomeDialogSessionListAdapter.SessionInItemLayout selectedSession = data.getSessions().get(position);
+            Long scheduleId = data.getSchedule().getScheduleId();
+            int ordinal = selectedSession.getOrdinal();
+
+            // Chuyển sang StartSessionFragment và truyền dữ liệu
+            Fragment startSessionFragment = new StartSessionFragment(scheduleId, ordinal);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.mainLayout_dialogContainer, startSessionFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         this.checkAndShowExplainTagIfEmptyList();
         this.requestScheduleDetail(new JSONObject(Map.of("id", scheduleId)));
         return view;
@@ -126,6 +142,7 @@ public class DetailScheduleForHomeFragment extends Fragment implements PrivateUI
                     this.data = HomeDetailSchedule.mapping(response);
                     this.checkAndShowExplainTagIfEmptyList();
                     this.initializeDataFromRequest();
+//                    Log.d("test ", String.valueOf(response));
                 } catch (RuntimeException e) {
                     e.fillInStackTrace();
                     Toast.makeText(this.getContext(), "An Error occurred. Please restart app.",
